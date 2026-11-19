@@ -99,11 +99,34 @@ def test_fraction_to_f32_rounds_half_to_even():
     assert f(Fraction(0)) == 0.0 and f(Fraction(5, 4)) == 1.25
 
 
-def test_band_formula_is_gamma_of_k_plus_2():
+def test_band_formula_is_gamma_of_k_plus_2_with_unit_roundoff_2_pow_minus_23():
+    # u = 2^-23 covers faithful rounding of the accumulator (round-to-nearest, round-toward-zero, any directed mode)
+    # and truncating alignment of the addends, not only round-to-nearest (u = 2^-24).
     g = load()
     k, abs_sum, abs_c = 16, Fraction(2), Fraction(1)
-    n = Fraction(k + 2, 2**24)
+    n = Fraction(k + 2, 2**23)
     assert g.band_for(k, abs_sum, abs_c) == n / (1 - n) * (abs_sum + abs_c)
+
+
+def test_the_band_covers_a_truncating_accumulator_that_round_to_nearest_would_not():
+    # Worst case for round-toward-zero: c = 1.0 and 16 products of (1023/1024) * 2^-23, each just under one ulp of 1.0.
+    # A truncating f32 accumulator loses every product (result 1.0); round-to-nearest rounds each up and stays close.
+    import numpy as np
+    g = load()
+    k = 16
+    term = Fraction(1023, 1024) * Fraction(1, 2**23)           # = 2^-12 * (2^-11 * (1 - 2^-10)), exact in f16 x f16
+    exact = Fraction(1) + k * term
+    acc = np.float32(1.0)
+    for _ in range(k):                                         # round toward zero after every addition
+        s = np.float32(acc + np.float32(float(term)))
+        if Fraction(float(s)) > Fraction(float(acc)) + term:   # nearest rounded up: step back one ulp
+            s = np.nextafter(s, np.float32(0.0))
+        acc = s
+    error = abs(Fraction(float(acc)) - exact)
+    assert acc == np.float32(1.0)                              # every product was truncated away
+    nearest_only_band = Fraction(k + 2, 2**24) / (1 - Fraction(k + 2, 2**24)) * (k * term + 1)
+    assert error > nearest_only_band                           # a round-to-nearest band is NOT enough
+    assert error <= g.band_for(k, k * term, Fraction(1))       # the band in the oracle IS
 
 
 def test_stored_band_matches_the_formula_for_one_banded_case(built):

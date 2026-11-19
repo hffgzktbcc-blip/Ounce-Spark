@@ -37,7 +37,9 @@ MAX_SM = 121
 
 
 def band_for(k: int, abs_sum: Fraction, abs_c: Fraction) -> Fraction:
-    n = Fraction(k + 2, 2**24)
+    """gamma_{K+2} * (sum |a*b| + |c|) with unit roundoff u = 2^-23, so it also covers a truncating (round-toward-zero)
+    accumulator and truncating alignment of the addends, not only round-to-nearest (u = 2^-24)."""
+    n = Fraction(k + 2, 2**23)
     return n / (1 - n) * (abs_sum + abs_c)
 
 
@@ -183,7 +185,7 @@ def build(seed: int = 20261118, inventory_path: pathlib.Path = DEFAULT_INVENTORY
                 b_pairs = [elems.random_value(fmt, rnd) for _ in range(k * N)]
                 c_vals = [float(np.float32(rnd.gauss(0, 100))) for _ in range(M * N)]
             cases.append(make_case(f"{fmt}-{shape_name}-{cls}-{idx}", shape, fmt, acc, cls, a_pairs, b_pairs, c_vals))
-    return {"cases": cases, "seed": seed, "band": "gamma_(K+2) * (sum|a*b| + |c|); gamma_n = n*2^-24/(1-n*2^-24)"}
+    return {"cases": cases, "seed": seed, "band": "gamma_(K+2) * (sum|a*b| + |c|); gamma_n = n*2^-23/(1-n*2^-23)"}
 
 
 def main(out_dir: pathlib.Path) -> int:

@@ -6,7 +6,7 @@ with TWO independent libraries (gfloat, ml_dtypes) that must agree. Output is co
 
 Scope notes (see docs/LIMITS.md): ue8m0 has decode only (PTX offers just .rz/.rp for it, and the libraries disagree on RN);
 PTX makes .satfinite mandatory for every narrow destination type, so non-saturating cases are library semantics
-(`ptx_valid: false`); NaN/Inf inputs under .satfinite are omitted because the inventory does not define them.
+(`ptx_valid: false`). NaN/Inf inputs under .satfinite follow the rules the PTX cvt text states (`basis: ptx_cvt_text`).
 """
 import importlib.metadata
 import json
@@ -95,18 +95,30 @@ def build(inventory_path: pathlib.Path = DEFAULT_INVENTORY) -> dict:
         fi, vals = FORMATS[name][1], decoded[name]
         has_special = formats[name]["has_nan"]
         pos = sorted({v for v in vals if math.isfinite(v) and v > 0})
-        xs = [0.0, -0.0, pos[0], pos[-1], pos[-1] + (pos[-1] - pos[-2]) / 2, 1e30, -1e30]
+        bits = formats[name]["bits"]
+        max_code = decoded[name].index(pos[-1])
+        xs = [0.0, -0.0, pos[0], pos[-1], pos[-1] + (pos[-1] - pos[-2]) / 2, 1e30, -1e30, math.inf, -math.inf, math.nan]
         for a, b in zip([0.0] + pos, pos):
             xs += [(a + b) / 2, -(a + b) / 2]
-        if has_special:
-            xs += [math.inf, -math.inf, math.nan]
+            for frac in (0.25, 0.75):          # off-grid, not ties: must go to the NEARER neighbour
+                xs += [a + (b - a) * frac, -(a + (b - a) * frac)]
         for x in xs:
             special = math.isnan(x) or math.isinf(x)
             for sat in (True, False):
                 if not has_special and not sat:
                     continue  # PTX makes .satfinite mandatory; libraries cannot represent the overflow
+                if special and not sat and not has_special:
+                    continue
                 if special and sat:
-                    continue  # inventory does not define NaN/Inf under .satfinite
+                    # Rules stated by the PTX cvt text (not computed by either library): NaN stays NaN where the format has
+                    # NaN and becomes positive MAX_NORM where it does not; any |x| > MAX_NORM, infinity included, becomes
+                    # sign-preserved MAX_NORM.
+                    if math.isnan(x):
+                        code, is_nan = (None, True) if has_special else (max_code, False)
+                    else:
+                        code, is_nan = max_code | ((1 << (bits - 1)) if x < 0 else 0), False
+                    cases.append({"fmt": name, "x": hexf(x), "sat": sat, "code": code, "nan": is_nan, "ptx_valid": True, "basis": "ptx_cvt_text"})
+                    continue
                 code = gfloat.encode_float(fi, gfloat.round_float(fi, x, sat=sat))
                 is_nan = math.isnan(gfloat.decode_float(fi, code).fval)
                 in_range = math.isfinite(x) and abs(x) <= pos[-1]
@@ -116,7 +128,7 @@ def build(inventory_path: pathlib.Path = DEFAULT_INVENTORY) -> dict:
                         key = f"encode|{name}|{hexf(x)}|{sat}"
                         (listed if key in known else unknown).append({"key": key, "fmt": name, "x": hexf(x), "sat": sat, "gfloat": code, "ml_dtypes": other})
                 # The spec fixes no canonical NaN code (gfloat and ml_dtypes differ), so NaN results carry no code.
-                cases.append({"fmt": name, "x": hexf(x), "sat": sat, "code": None if is_nan else code, "nan": is_nan, "ptx_valid": sat})
+                cases.append({"fmt": name, "x": hexf(x), "sat": sat, "code": None if is_nan else code, "nan": is_nan, "ptx_valid": sat, "basis": "libraries"})
     if unknown:
         raise AssertionError(f"unlisted disagreements between gfloat and ml_dtypes: {unknown[:5]} (add to oracles/KNOWN_DISAGREEMENTS.md with a reason)")
     cases.sort(key=lambda c: (c["fmt"], c["sat"], float.fromhex(c["x"]) if c["x"].startswith(("0x", "-0x")) else (math.inf if c["x"] == "inf" else -math.inf if c["x"] == "-inf" else math.inf * 2), c["x"]))

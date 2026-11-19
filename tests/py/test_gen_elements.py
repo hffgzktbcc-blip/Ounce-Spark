@@ -32,10 +32,20 @@ def decode(built, fmt):
     return [float.fromhex(s) if s.startswith(("0x", "-0x")) else float(s) for s in built["formats"][fmt]["decode"]]
 
 
+def xval(s):
+    return float.fromhex(s) if s.startswith(("0x", "-0x")) else float(s)
+
+
 def case(built, fmt, x, sat):
-    hits = [c for c in built["encode_cases"] if c["fmt"] == fmt and float.fromhex(c["x"]) == x and c["sat"] == sat
-            and math.copysign(1, float.fromhex(c["x"])) == math.copysign(1, x)]
+    hits = [c for c in built["encode_cases"] if c["fmt"] == fmt and c["sat"] == sat and not math.isnan(xval(c["x"]))
+            and xval(c["x"]) == x and math.copysign(1, xval(c["x"])) == math.copysign(1, x)]
     assert hits, f"no encode case for {fmt} {x} sat={sat}"
+    return hits[0]
+
+
+def special(built, fmt, token, sat):
+    hits = [c for c in built["encode_cases"] if c["fmt"] == fmt and c["x"] == token and c["sat"] == sat]
+    assert hits, f"no encode case for {fmt} {token} sat={sat}"
     return hits[0]
 
 
@@ -90,11 +100,53 @@ def test_satfinite_clamps_and_negative_zero_survives(built):
     assert case(built, "e2m1", -0.0, True)["code"] == 0b1000
 
 
-def test_no_nan_or_inf_cases_for_formats_without_them(built):
+def test_nan_under_satfinite_is_positive_max_norm_for_formats_without_nan(built):
+    # PTX cvt: "For .e2m1x2, .e2m3x2, .e3m2x2 ... destination formats NaN results are converted to positive MAX_NORM."
+    for fmt, max_code in [("e2m1", 0b0111), ("e2m3", 0x1F), ("e3m2", 0x1F)]:
+        c = special(built, fmt, "nan", True)
+        assert c["code"] == max_code and c["nan"] is False, fmt
+
+
+def test_infinity_under_satfinite_is_sign_preserved_max_norm(built):
+    # PTX cvt: "If the absolute value of input is greater than MAX_NORM ... the result is sign-preserved MAX_NORM."
+    for fmt, max_code, sign in [("e4m3", 0x7E, 0x80), ("e5m2", 0x7B, 0x80), ("e2m3", 0x1F, 0x20), ("e3m2", 0x1F, 0x20), ("e2m1", 0x07, 0x08)]:
+        assert special(built, fmt, "inf", True)["code"] == max_code, fmt
+        assert special(built, fmt, "-inf", True)["code"] == sign | max_code, fmt
+
+
+def test_nan_under_satfinite_stays_nan_for_formats_that_have_nan(built):
+    # PTX cvt: for .e4m3x2/.e5m2x2 "if the input value is NaN, then the result is NaN in the specified destination format."
+    for fmt in ("e4m3", "e5m2"):
+        c = special(built, fmt, "nan", True)
+        assert c["nan"] is True and c["code"] is None
+
+
+def test_non_saturating_conversion_exists_only_for_formats_with_nan(built):
     for c in built["encode_cases"]:
         if c["fmt"] in ("e2m1", "e2m3", "e3m2"):
-            assert math.isfinite(float.fromhex(c["x"]) if c["x"].startswith(("0x", "-0x")) else float(c["x"]))
-            assert c["sat"] is True, "PTX makes .satfinite mandatory for these destination types"
+            assert c["sat"] is True, "PTX makes .satfinite mandatory and the libraries cannot represent the overflow"
+
+
+def test_off_grid_values_round_to_the_nearer_code(built):
+    # Independent of the libraries: for EVERY gap of EVERY format, the 1/4 and 3/4 points must go to the nearer neighbour.
+    for fmt in ("e4m3", "e5m2", "e2m3", "e3m2", "e2m1"):
+        values = decode(built, fmt)
+        pos = sorted((v, code) for code, v in enumerate(values) if math.isfinite(v) and v > 0 and math.copysign(1, v) > 0)
+        pairs = list(zip([(0.0, 0)] + pos, pos))
+        for (a, ca), (b, cb) in pairs:
+            for frac, want in ((0.25, ca), (0.75, cb)):
+                x = a + (b - a) * frac
+                assert case(built, fmt, x, True)["code"] == want, (fmt, x)
+                assert case(built, fmt, -x, True)["code"] == (want | (1 << (built["formats"][fmt]["bits"] - 1))), (fmt, -x)
+
+
+def test_known_off_grid_points(built):
+    assert case(built, "e2m1", 0.125, True)["code"] == 0b0000
+    assert case(built, "e2m1", 0.375, True)["code"] == 0b0001
+    assert case(built, "e2m1", 2.25, True)["code"] == 0b0100
+    assert case(built, "e2m1", 2.75, True)["code"] == 0b0101
+    assert case(built, "e4m3", 1.03125, True)["code"] == 0x38
+    assert case(built, "e4m3", 1.09375, True)["code"] == 0x39
 
 
 def test_ue8m0_has_no_encode_cases(built):
