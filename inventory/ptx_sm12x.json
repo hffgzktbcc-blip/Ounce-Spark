@@ -204,6 +204,20 @@
       "syntax": "sin.approx{.2pi}{.ftz}.f32 d, a;"
     },
     {
+      "anchor": "floating-point-instructions-sin",
+      "clause": "9.7.3.18",
+      "kind": "error_bound",
+      "name": "sin",
+      "statement": "The maximum absolute error over input range is as follows: For radians as input: Range [-2pi .. 2pi] [-100pi .. +100pi] Error 2 -20.5 2 -14.7"
+    },
+    {
+      "anchor": "floating-point-instructions-sin",
+      "clause": "9.7.3.18",
+      "kind": "error_bound",
+      "name": "sin",
+      "statement": "The maximum absolute error over input range is as follows: For cycles as input, i.e. sin with the .2pi qualifier: Range [-1 .. 1] [-50 .. +50] Error 2 -20 2 -14.2"
+    },
+    {
       "anchor": "floating-point-instructions-cos",
       "archs": [],
       "clause": "9.7.3.19",
@@ -216,6 +230,20 @@
       "sm_121a_in_archs": false,
       "statement": "Supported on all target architectures.",
       "syntax": "cos.approx{.2pi}{.ftz}.f32 d, a;"
+    },
+    {
+      "anchor": "floating-point-instructions-cos",
+      "clause": "9.7.3.19",
+      "kind": "error_bound",
+      "name": "cos",
+      "statement": "The maximum absolute error over input range is as follows: For radians as input: Range [-2pi .. 2pi] [-100pi .. +100pi] Error 2 -20.4 2 -14.7"
+    },
+    {
+      "anchor": "floating-point-instructions-cos",
+      "clause": "9.7.3.19",
+      "kind": "error_bound",
+      "name": "cos",
+      "statement": "The maximum absolute error over input range is as follows: For cycles as input, i.e. cos with the .2pi qualifier: Range [-1 .. 1] [-50 .. +50] Error 2 -19.9 2 -14.2"
     },
     {
       "anchor": "floating-point-instructions-lg2",

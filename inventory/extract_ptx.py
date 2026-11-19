@@ -161,14 +161,14 @@ def _parse_forms(text: str, base: dict):
 
 
 def _prose(sec):
-    """Paragraphs outside the syntax, ISA-notes and examples regions (rubrics can nest, e.g. under Notes)."""
+    """Paragraphs and tables outside the syntax, ISA-notes and examples regions (rubrics can nest, e.g. under Notes)."""
     skip, current = {"Syntax", "PTX ISA Notes", "Target ISA Notes", "Examples"}, None
     for child in sec.children:
         if not getattr(child, "name", None):
             continue
         if child.name == "p" and "rubric" in (child.get("class") or []):
             current = _text(child)
-        elif child.name == "p" and current is not None and current not in skip and not current.startswith("Examples"):
+        elif child.name in ("p", "table") and current is not None and current not in skip and not current.startswith("Examples"):
             yield child
 
 
@@ -208,11 +208,36 @@ def _entries_for(sec, name, number):
                     upper = False
                 out.append(dict(base, kind="packing", statement=_excerpt(text), first_operand_upper=upper))
     if name in APPROX:
+        error_intro = sub_intro = ""
         for node in _prose(sec):
-            hits = [s for s in re.split(r"(?<=\.)\s+", _text(node)) if ERROR_WORDS.search(s) and re.search(r"\d", s)]
+            text = _text(node)
+            if node.name == "table":
+                # e.g. sin/cos: the bound is a table of ranges and errors under an introducing sentence ("The maximum
+                # absolute error ...") and a sub-heading ("For radians as input:"); keep both so the kind of error survives
+                if re.search(r"\bError\b", text) and re.search(r"\d", text):
+                    parts = [error_intro, sub_intro if sub_intro != error_intro else "", text]
+                    out.append(dict(base, kind="error_bound", statement=_excerpt(" ".join(x for x in parts if x))))
+                continue
+            sub_intro = text
+            if re.search(r"\berror\b", text, re.I):
+                error_intro = text
+            hits = [s for s in re.split(r"(?<=\.)\s+", text) if ERROR_WORDS.search(s) and re.search(r"\d", s)]
             if hits:
                 out.append(dict(base, kind="error_bound", statement=_excerpt(" ".join(hits))))
     return out
+
+
+def _require_content(name: str, kinds: set) -> None:
+    """A section that parsed but yielded nothing means the page structure changed: say so instead of emitting less."""
+    hint = "the page structure may have changed"
+    if "target_note" not in kinds:
+        raise ExtractionError(f"no Target ISA Notes statements found for {name}: {hint}")
+    if name == "mma" and "form" not in kinds:
+        raise ExtractionError(f"no instruction forms found for {name}: {hint}")
+    if name == "cvt" and "packing" not in kinds:
+        raise ExtractionError(f"no x2 packing statement found for {name}: {hint}")
+    if name in APPROX and "error_bound" not in kinds:
+        raise ExtractionError(f"no error bound found for approx instruction {name}: {hint}")
 
 
 def extract(html: str, source_sha256: str | None = None) -> dict:
@@ -242,14 +267,16 @@ def extract(html: str, source_sha256: str | None = None) -> dict:
 
     instructions = []
     for name, matches in WANTED.items():
-        found = False
+        found, mine = False, []
         for sec, heading in sections:
             m = TITLE.match(heading)
             if m and matches(m.group(3).strip()):
                 found = True
-                instructions.extend(_entries_for(sec, name, m.group(1)))
+                mine.extend(_entries_for(sec, name, m.group(1)))
         if not found:
             raise ExtractionError(f"instruction section not found: {name}")
+        _require_content(name, {e["kind"] for e in mine})
+        instructions.extend(mine)
     instructions.sort(key=lambda e: [int(p) for p in e["clause"].split(".")])
     return {
         "ptx_version": version.group(1),

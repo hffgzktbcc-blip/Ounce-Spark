@@ -55,6 +55,19 @@ TARGET = (
 )
 
 
+APPROX = ["rcp", "sqrt", "rsqrt", "sin", "cos", "lg2", "ex2", "tanh"]
+DEFAULT_FORM = '<div class="highlight-text"><pre>mma.sync.aligned.m16n8k8.row.col.dtype.f16.f16.ctype d, a, b, c;\n\n.dtype = {.f16, .f32};\n.ctype = {.f16, .f32};</pre></div>'
+
+
+def default_description(name):
+    """A complete page: cvt states its packing order and every approximate instruction states an error bound."""
+    if name == "cvt":
+        return "<p>The converted values are packed in d such that the value converted from input a is stored in the upper 4 bits of d.</p>"
+    if name in APPROX:
+        return "<p>The approx variant has a maximum ulp error of 2 across the full range of inputs.</p>"
+    return ""
+
+
 def instruction_section(i, name, notes="", description="", syntax_html=None):
     category, title = INSTRUCTIONS[name]
     syntax_html = syntax_html or '<div class="highlight-text"><pre>demo.form  d, a;</pre></div>'
@@ -73,7 +86,7 @@ def page(omit=(), include_smem=True, notes=None, descriptions=None, syntax=None,
         parts.append(SMEM)
     for i, name in enumerate(INSTRUCTIONS, start=1):
         if name not in omit:
-            parts.append(instruction_section(i, name, notes.get(name, "<p>Requires sm_70 or higher.</p>"), descriptions.get(name, ""), syntax.get(name)))
+            parts.append(instruction_section(i, name, notes.get(name, "<p>Requires sm_70 or higher.</p>"), descriptions.get(name, default_description(name)), syntax.get(name, DEFAULT_FORM if name == "mma" else None)))
     parts.append("</body></html>")
     return "".join(parts)
 
@@ -317,3 +330,47 @@ def test_real_page_mma_forms():
     assert has("m16n8k32", "s8", "s8", "s32")
     assert has("m16n8k64", "e2m1", "e2m1", "f32", kind="kind::mxf4nvf4")
     assert any("ue4m3" in f["scale_types"] for f in fs)
+
+
+def test_a_renamed_rubric_is_an_error_not_an_empty_inventory():
+    ex = load("extract_ptx")
+    with pytest.raises(ex.ExtractionError, match="Target ISA Notes"):
+        ex.extract(page().replace("Target ISA Notes", "Target ISA notes"))
+
+
+def test_mma_without_any_form_is_an_error():
+    ex = load("extract_ptx")
+    with pytest.raises(ex.ExtractionError, match="instruction forms.*mma"):
+        ex.extract(page(syntax={"mma": '<div class="highlight-text"><pre>nothing useful here</pre></div>'}))
+
+
+def test_cvt_without_a_packing_statement_is_an_error():
+    ex = load("extract_ptx")
+    with pytest.raises(ex.ExtractionError, match="packing.*cvt"):
+        ex.extract(page(descriptions={"cvt": "<p>Nothing about packing.</p>"}))
+
+
+def test_an_approx_instruction_without_an_error_bound_is_an_error():
+    ex = load("extract_ptx")
+    with pytest.raises(ex.ExtractionError, match="error bound.*sin"):
+        ex.extract(page(descriptions={"sin": "<p>Nothing numeric here.</p>"}))
+
+
+def test_error_bounds_given_in_a_table_are_extracted():
+    ex = load("extract_ptx")
+    table = (
+        "<p>The maximum absolute error over input range is as follows:</p>"
+        "<table><tr><th>Range</th><td>[-2pi .. 2pi]</td></tr><tr><th>Error</th><td>2 <sup>-20.5</sup></td></tr></table>"
+    )
+    found = entries(ex.extract(page(descriptions={"sin": table})), "sin", "error_bound")
+    assert found and "20.5" in found[0]["statement"] and found[0]["statement"].startswith("The maximum absolute error")
+
+
+@pytest.mark.skipif(not REAL_PAGE.exists(), reason="run inventory/fetch_ptx.py first")
+def test_real_page_every_approx_instruction_has_an_error_bound():
+    ex = load("extract_ptx")
+    inv = ex.extract(REAL_PAGE.read_text(errors="replace"))
+    for name in APPROX:
+        assert entries(inv, name, "error_bound"), name
+    # the table bounds must keep the sentence that says what kind of error they are
+    assert all("absolute error" in e["statement"] for name in ("sin", "cos") for e in entries(inv, name, "error_bound"))
