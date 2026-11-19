@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Spark decode/prefill reading",
+  "type": "object",
+  "required": ["id", "source_url", "source_kind", "operator", "model", "fmt", "stack", "depth", "metric", "batch", "spec_decoding", "value_tps"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "source_url": {"type": "string", "pattern": "^https://"},
+    "source_kind": {"enum": ["verified_raw", "secondary"]},
+    "operator": {"type": "string", "minLength": 1},
+    "model": {"type": "string", "minLength": 1},
+    "active_params_b": {"type": "number", "exclusiveMinimum": 0},
+    "params_total_b": {"type": "number", "exclusiveMinimum": 0},
+    "fmt": {"type": "string", "minLength": 1},
+    "bits_per_weight": {"type": "number", "exclusiveMinimum": 0},
+    "stack": {"type": "string", "minLength": 1},
+    "stack_version": {"type": "string"},
+    "build": {"type": "string"},
+    "kernel": {"type": "string"},
+    "depth": {"type": "integer", "minimum": 0},
+    "metric": {"enum": ["tg", "pp"]},
+    "batch": {"type": "integer", "minimum": 1},
+    "spec_decoding": {"enum": ["true", "false", "unknown"]},
+    "value_tps": {"type": "number", "exclusiveMinimum": 0},
+    "value_pm": {"type": "number", "minimum": 0},
+    "date": {"type": "string"},
+    "notes": {"type": "string"}
+  }
+}

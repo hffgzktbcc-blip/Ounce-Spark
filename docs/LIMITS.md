@@ -53,3 +53,15 @@ Nothing is verified yet beyond the oracle data below. Entries are added as each 
   exactly-once coverage. Layouts for the k32 types are Plan B.
 - NaN and Inf propagate as IEEE f32 arithmetic does; this is tested on 2x2x2 matrices, not taken from the oracle.
 - Label: **spec-verified** for the listed combinations, not hardware agreement.
+
+### Calibration dataset and noise floor (Task 7, `data/`, `tools/noise_floor.py`)
+- 15 readings: 8 `verified_raw` (field notes JSONL) and 7 `secondary` (including the 2 llama.cpp rows, which were read through a
+  page-summary tool, so they are **not** raw-verified; spec section 15 called them verified and that was too strong).
+- One source is internally inconsistent: the 30.3 tok/s Gemma-4 NVFP4 row is labelled "SEM spec-decoding" in results.jsonl but
+  "no spec-decoding" in the README and RESULTS.md. It is recorded with `spec_decoding = unknown`; Gate 4a v2 had counted it as
+  non-speculative (it moves the Gemma cell median from 0.30 to 0.29, no conclusion changes).
+- **The noise floor cannot be estimated yet.** Exactly one group has two distinct submitters (gpt-oss-120B MXFP4 on llama.cpp:
+  eugr and verdictbits) and the tool reports `sigma_between = 0.047`. That is half the log difference of two medians, the
+  verdictbits figure probably comes from the same llama.cpp results file, and the 25% within-operator spread across builds
+  (45.87 vs 60.57) is hidden because values from one submitter are reduced to their median. Do not quote 0.047 as a noise floor.
+- `sigma_between` is the unscaled MAD of ln(x) across submitters, as the spec states; build and kernel fixed effects are not modelled.
