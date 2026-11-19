@@ -488,3 +488,8 @@ Corrections to this document:
 - Section 16: the block-scale and `.acc::f16` lists naming `sm_121a` belong to `mma.sp` and `multimem.ld_reduce`; see `inventory/OPEN_QUESTIONS.md`.
 - The Gate 2 spike's decision is **fork ptoxide** (`docs/decisions/0001-ptx-executor.md`); its "hours" are agent wall-clock (about 8 minutes).
 - The noise-floor tool cannot yet produce a usable estimate from the public data (`docs/LIMITS.md`).
+- Whole-branch review corrections: (a) the PTX cvt text **does** define NaN and Inf under `.satfinite` (NaN to positive MAX_NORM for e2m1/e2m3/e3m2;
+  |x| > MAX_NORM to sign-preserved MAX_NORM) and the codec now follows it; (b) the `mma` band uses u = 2^-23 so it also covers truncating
+  accumulators; (c) the inventory now fails loudly if an instruction yields no Target ISA Notes, `mma` no forms, `cvt` no packing statement or an
+  approximate instruction no error bound, and it reads the sin/cos error tables; (d) encode rounding to the *nearer* code is now pinned for every
+  gap of every format.
