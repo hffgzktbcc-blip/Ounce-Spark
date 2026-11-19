@@ -1,0 +1,9 @@
+[package]
+name = "spark-num"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Numeric reference for the ounce-spark project: narrow float formats and mma semantics"
+
+[dev-dependencies]
+serde_json = "1"

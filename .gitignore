@@ -3,3 +3,4 @@ target/
 __pycache__/
 .superpowers/
 .pytest_cache/
+spikes/ptoxide-mma/vendor/

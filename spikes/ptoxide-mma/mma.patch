@@ -1,0 +1,451 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index 61040fd..f8519b8 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -12,3 +12,9 @@ repository = "https://github.com/gvilums/ptoxide"
+ bytemuck = "1.14.0"
+ logos = "0.13.0"
+ thiserror = "1.0.50"
++
++[dependencies.spark-num]
++path = "../../../crates/spark-num"
++
++[dev-dependencies]
++serde_json = "1"
+diff --git a/src/ast/lex.rs b/src/ast/lex.rs
+index db078c7..c27f0f8 100644
+--- a/src/ast/lex.rs
++++ b/src/ast/lex.rs
+@@ -459,6 +459,18 @@ pub enum Token<'a> {
+     #[token(".sync")]
+     Sync,
+ 
++    #[token(".aligned")]
++    Aligned,
++
++    #[token(".row")]
++    Row,
++
++    #[token(".col")]
++    Col,
++
++    #[token(".m16n8k16")]
++    ShapeM16N8K16,
++
+     #[token(".to")]
+     To,
+ 
+diff --git a/src/ast/mod.rs b/src/ast/mod.rs
+index da04dbe..f70b4d3 100644
+--- a/src/ast/mod.rs
++++ b/src/ast/mod.rs
+@@ -174,6 +174,8 @@ pub enum Operand {
+     Variable(Ident),
+     Immediate(Immediate),
+     Address(AddressOperand),
++    /// A brace-enclosed register vector, e.g. the fragments of mma.sync: `{%f0, %f1}`.
++    Vector(Vec<Ident>),
+ }
+ 
+ #[derive(Debug, Clone, Copy)]
+@@ -269,6 +271,8 @@ pub enum Operation {
+         params: Vec<Ident>,
+     },
+     BarrierSync,
++    /// `mma.sync.aligned.m16n8k16.row.col.<d>.<a>.<b>.<c>`; only f32.f16.f16.f32 is executable.
++    MmaSync { d: Type, a: Type, b: Type, c: Type },
+     Branch,
+     Return,
+ }
+@@ -736,6 +740,18 @@ impl<'a> Parser<'a> {
+                 let ty = self.parse_type()?;
+                 Ok(Operation::ShiftLeft(ty))
+             }
++            Token::Mma => {
++                self.consume(Token::Sync)?;
++                self.consume(Token::Aligned)?;
++                self.consume(Token::ShapeM16N8K16)?;
++                self.consume(Token::Row)?;
++                self.consume(Token::Col)?;
++                let d = self.parse_type()?;
++                let a = self.parse_type()?;
++                let b = self.parse_type()?;
++                let c = self.parse_type()?;
++                Ok(Operation::MmaSync { d, a, b, c })
++            }
+             Token::Bra => {
+                 self.consume_match(Token::Uniform)?;
+                 Ok(Operation::Branch)
+@@ -803,6 +819,23 @@ impl<'a> Parser<'a> {
+                 self.consume(Token::RightBracket)?;
+                 res
+             }
++            Token::LeftBrace => {
++                let mut idents = Vec::new();
++                loop {
++                    let t = self.must_pop()?;
++                    match t.0 {
++                        Token::Identifier(s) => idents.push(s.to_string()),
++                        _ => return Err(self.unexpected(t)),
++                    }
++                    let t = self.must_pop()?;
++                    match t.0 {
++                        Token::Comma => {}
++                        Token::RightBrace => break,
++                        _ => return Err(self.unexpected(t)),
++                    }
++                }
++                Operand::Vector(idents)
++            }
+             _ => return Err(self.unexpected(t)),
+         };
+         Ok(operand)
+diff --git a/src/compiler.rs b/src/compiler.rs
+index fb63b19..8918f9d 100644
+--- a/src/compiler.rs
++++ b/src/compiler.rs
+@@ -23,6 +23,8 @@ pub enum CompilationError {
+     InvalidOperand(ast::Operand),
+     #[error("missing operand")]
+     MissingOperand,
++    #[error("unsupported: {0}")]
++    Unsupported(String),
+     #[error("invalid immediate type")]
+     InvalidImmediateType,
+     #[error("invalid register type: {0:?}")]
+@@ -267,7 +269,7 @@ impl<'a> FuncCodegenState<'a> {
+             Operand::Variable(ident) => self.var_map.get_reg(ident).map(|r| r.into()),
+             Operand::Immediate(imm) => self.construct_immediate(ty, *imm).map(|r| r.into()),
+             Operand::SpecialReg(special) => Ok((*special).into()),
+-            op @ Operand::Address(_) => Err(CompilationError::InvalidOperand(op.clone())),
++            op @ (Operand::Address(_) | Operand::Vector(_)) => Err(CompilationError::InvalidOperand(op.clone())),
+         }
+     }
+ 
+@@ -490,7 +492,7 @@ impl<'a> FuncCodegenState<'a> {
+                         }
+                         Operand::Immediate(imm) => self.construct_immediate(ty, imm)?.into(),
+                         Operand::SpecialReg(special) => special.into(),
+-                        op @ Operand::Address(_) => {
++                        op @ (Operand::Address(_) | Operand::Vector(_)) => {
+                             return Err(CompilationError::InvalidOperand(op.clone()))
+                         }
+                     };
+@@ -658,6 +660,32 @@ impl<'a> FuncCodegenState<'a> {
+                 }
+                 _ => todo!(),
+             },
++            Operation::MmaSync { d, a, b, c } => {
++                use ast::Type as T;
++                if !matches!((d, a, b, c), (T::F32, T::F16, T::F16, T::F32)) {
++                    return Err(CompilationError::Unsupported(
++                        "mma.sync.m16n8k16 is implemented only for f32.f16.f16.f32".to_string(),
++                    ));
++                }
++                let [Operand::Vector(dv), Operand::Vector(av), Operand::Vector(bv), Operand::Vector(cv)] =
++                    instr.operands.as_slice()
++                else {
++                    return Err(CompilationError::MissingOperand);
++                };
++                let regs = |names: &[String], n: usize| -> Result<Vec<vm::GenericReg>, CompilationError> {
++                    if names.len() != n {
++                        return Err(CompilationError::MissingOperand);
++                    }
++                    names.iter().map(|name| self.var_map.get_reg(name)).collect()
++                };
++                let (dr, ar, br, cr) = (regs(dv, 4)?, regs(av, 4)?, regs(bv, 2)?, regs(cv, 4)?);
++                self.instructions.push(vm::Instruction::MmaSyncM16N8K16F16F32 {
++                    d: [dr[0], dr[1], dr[2], dr[3]],
++                    a: [ar[0], ar[1], ar[2], ar[3]],
++                    b: [br[0], br[1]],
++                    c: [cr[0], cr[1], cr[2], cr[3]],
++                });
++            }
+             Operation::Branch => {
+                 let [Operand::Variable(ident)] = instr.operands.as_slice() else {
+                     todo!()
+diff --git a/src/vm.rs b/src/vm.rs
+index 6c245b3..d8f4818 100644
+--- a/src/vm.rs
++++ b/src/vm.rs
+@@ -154,6 +154,14 @@ pub enum Instruction {
+     SkipIf(RegOperand, bool),
+ 
+     Return,
++
++    /// Warp-collective `mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32` on per-lane fragment registers.
++    MmaSyncM16N8K16F16F32 {
++        d: [GenericReg; 4],
++        a: [GenericReg; 4],
++        b: [GenericReg; 2],
++        c: [GenericReg; 4],
++    },
+ }
+ 
+ #[derive(Clone, Copy, Debug)]
+@@ -398,6 +406,10 @@ pub enum VmError {
+     ParseError(#[from] crate::ast::ParseErr),
+     #[error("Compile error: {0:?}")]
+     CompileError(#[from] crate::compiler::CompilationError),
++    #[error("a warp-collective instruction needs all 32 lanes of its warp, but the block has only {0} threads in it")]
++    PartialWarp(usize),
++    #[error("warp {0} did not reach the warp-collective instruction with every lane (a lane exited or diverged)")]
++    IncompleteWarp(usize),
+ }
+ 
+ type VmResult<T> = Result<T, VmError>;
+@@ -450,6 +462,7 @@ enum ThreadResult {
+     Continue,
+     Sync(usize, Option<usize>),
+     Arrive(usize, Option<usize>),
++    WarpMma(Instruction),
+     Exit,
+ }
+ 
+@@ -724,6 +737,7 @@ impl Context {
+         let cta_size = (ntid.0 * ntid.1 * ntid.2) as usize;
+ 
+         let mut barriers = Barriers::new();
++        let mut parked: HashMap<usize, Vec<(usize, Instruction, ThreadState)>> = HashMap::new();
+ 
+         while let Some(mut state) = runnable.pop() {
+             loop {
+@@ -739,10 +753,30 @@ impl Context {
+                         runnable.extend(barriers.block(idx, cnt, state)?);
+                         break;
+                     }
++                    ThreadResult::WarpMma(inst) => {
++                        let linear = (state.tid.0 + state.tid.1 * ntid.0 + state.tid.2 * ntid.0 * ntid.1) as usize;
++                        let (warp, lane) = (linear / 32, linear % 32);
++                        let in_warp = cta_size.saturating_sub(warp * 32).min(32);
++                        if in_warp != 32 {
++                            return Err(VmError::PartialWarp(in_warp));
++                        }
++                        let group = parked.entry(warp).or_default();
++                        group.push((lane, inst, state));
++                        if group.len() == 32 {
++                            let mut lanes = parked.remove(&warp).unwrap();
++                            lanes.sort_by_key(|(lane, _, _)| *lane);
++                            warp_mma_m16n8k16_f16_f32(&mut lanes)?;
++                            runnable.extend(lanes.into_iter().map(|(_, _, state)| state));
++                        }
++                        break;
++                    }
+                     ThreadResult::Exit => break,
+                 }
+             }
+         }
++        if let Some(warp) = parked.keys().next() {
++            return Err(VmError::IncompleteWarp(*warp));
++        }
+         Ok(())
+     }
+ 
+@@ -930,6 +964,7 @@ impl Context {
+                     thread.iptr.0 += 1;
+                 }
+             }
++            inst @ Instruction::MmaSyncM16N8K16F16F32 { .. } => return Ok(ThreadResult::WarpMma(inst)),
+             Instruction::Return => thread.frame_teardown(),
+             Instruction::PushArg(reg) => {
+                 let val = thread.get(reg);
+@@ -1195,3 +1230,62 @@ mod test {
+         res.iter().for_each(|v| assert_eq!(*v, 3));
+     }
+ }
++
++
++fn f16_bits_to_f64(bits: u16) -> f64 {
++    let (sign, exp, man) = ((bits >> 15) & 1, ((bits >> 10) & 0x1F) as i32, (bits & 0x3FF) as f64);
++    let magnitude = match exp {
++        0 => man * 2f64.powi(-24),
++        0x1F if man == 0.0 => f64::INFINITY,
++        0x1F => f64::NAN,
++        _ => (1.0 + man / 1024.0) * 2f64.powi(exp - 15),
++    };
++    if sign == 1 { -magnitude } else { magnitude }
++}
++
++/// Execute one warp's `mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32`.
++///
++/// Assumption (from model memory, not yet checked against the PTX figures): in a packed `.f16x2` fragment register the
++/// element with the lower index sits in bits 15:0 and the next one in bits 31:16.
++fn warp_mma_m16n8k16_f16_f32(lanes: &mut [(usize, Instruction, ThreadState)]) -> VmResult<()> {
++    use spark_num::mma::{lane_a_coords, lane_b_coords, lane_cd_coords, mma_ref_f32, MmaShape};
++    let shape = MmaShape { m: 16, n: 8, k: 16 };
++    let Instruction::MmaSyncM16N8K16F16F32 { d, a, b, c } = lanes[0].1.clone() else {
++        unreachable!("only mma instructions are parked");
++    };
++    let first = format!("{:?}", lanes[0].1);
++    if lanes.iter().any(|(_, inst, _)| format!("{inst:?}") != first) {
++        return Err(VmError::IncompleteWarp(0));
++    }
++    let (mut amat, mut bmat, mut cmat) = (vec![0.0f64; 16 * 16], vec![0.0f64; 16 * 8], vec![0.0f32; 16 * 8]);
++    for (lane, _, st) in lanes.iter() {
++        let (ac, bc, cdc) = (lane_a_coords(shape, *lane).unwrap(), lane_b_coords(shape, *lane).unwrap(), lane_cd_coords(*lane));
++        for (r, reg) in a.iter().enumerate() {
++            let word = st.get_u32((*reg).into());
++            for (half, bits) in [(0, word as u16), (1, (word >> 16) as u16)] {
++                let (row, col) = ac[2 * r + half];
++                amat[row * 16 + col] = f16_bits_to_f64(bits);
++            }
++        }
++        for (r, reg) in b.iter().enumerate() {
++            let word = st.get_u32((*reg).into());
++            for (half, bits) in [(0, word as u16), (1, (word >> 16) as u16)] {
++                let (row, col) = bc[2 * r + half];
++                bmat[row * 8 + col] = f16_bits_to_f64(bits);
++            }
++        }
++        for (r, reg) in c.iter().enumerate() {
++            let (row, col) = cdc[r];
++            cmat[row * 8 + col] = st.get_f32((*reg).into());
++        }
++    }
++    let dmat = mma_ref_f32(shape, &amat, &bmat, &cmat);
++    for (lane, _, st) in lanes.iter_mut() {
++        let cdc = lane_cd_coords(*lane);
++        for (r, reg) in d.iter().enumerate() {
++            let (row, col) = cdc[r];
++            st.set_f32(*reg, dmat[row * 8 + col]);
++        }
++    }
++    Ok(())
++}
+diff --git a/tests/mma_spike.rs b/tests/mma_spike.rs
+new file mode 100644
+index 0000000..d3ee44c
+--- /dev/null
++++ b/tests/mma_spike.rs
+@@ -0,0 +1,131 @@
++//! Gate 2 spike: one warp executes a hand-written PTX kernel containing mma.sync m16n8k16 (f16 -> f32)
++//! and the result must match the spec-first oracle in oracles/data/mma.json.
++use ptoxide::{Argument, Context, LaunchParams};
++use serde_json::Value;
++
++const KERNEL: &str = include_str!("../../kernels/mma_m16n8k16_f16.ptx");
++
++fn oracle() -> Value {
++    let path = format!("{}/../../../oracles/data/mma.json", env!("CARGO_MANIFEST_DIR"));
++    serde_json::from_str(&std::fs::read_to_string(path).unwrap()).unwrap()
++}
++
++fn parse(s: &str) -> f64 {
++    match s {
++        "nan" => return f64::NAN,
++        "inf" => return f64::INFINITY,
++        "-inf" => return f64::NEG_INFINITY,
++        _ => {}
++    }
++    let (neg, rest) = s.strip_prefix('-').map_or((false, s), |r| (true, r));
++    let rest = rest.strip_prefix("0x").unwrap();
++    let (mant, exp) = rest.split_once('p').unwrap();
++    let (int, frac) = mant.split_once('.').unwrap_or((mant, ""));
++    let mut v = u64::from_str_radix(int, 16).unwrap() as f64;
++    let mut scale = 1.0 / 16.0;
++    for d in frac.chars() {
++        v += d.to_digit(16).unwrap() as f64 * scale;
++        scale /= 16.0;
++    }
++    let v = v * 2f64.powi(exp.parse::<i32>().unwrap());
++    if neg { -v } else { v }
++}
++
++fn floats(v: &Value) -> Vec<f64> {
++    v.as_array().unwrap().iter().map(|s| parse(s.as_str().unwrap())).collect()
++}
++
++/// Run the kernel on one oracle case and return D (16x8, row-major).
++fn run_case(case: &Value) -> Vec<f32> {
++    let a_bits: Vec<u16> = case["a_bits"].as_array().unwrap().iter().map(|x| x.as_u64().unwrap() as u16).collect();
++    let b_row_major: Vec<u16> = case["b_bits"].as_array().unwrap().iter().map(|x| x.as_u64().unwrap() as u16).collect();
++    // The kernel wants B column-major: element (r, c) at c*16 + r. The oracle stores B row-major: (r, c) at r*8 + c.
++    let mut b_col_major = vec![0u16; 16 * 8];
++    for r in 0..16 {
++        for c in 0..8 {
++            b_col_major[c * 16 + r] = b_row_major[r * 8 + c];
++        }
++    }
++    let c_vals: Vec<f32> = floats(&case["c"]).iter().map(|&x| x as f32).collect();
++
++    let mut ctx = Context::new_with_module(KERNEL).expect("kernel compiles");
++    let (da, db, dc, dd) = (ctx.alloc::<u16>(256), ctx.alloc::<u16>(128), ctx.alloc::<f32>(128), ctx.alloc::<f32>(128));
++    ctx.write(da, &a_bits);
++    ctx.write(db, &b_col_major);
++    ctx.write(dc, &c_vals);
++    ctx.run(
++        LaunchParams::func("mma_m16n8k16_f16").grid1d(1).block1d(32),
++        &[Argument::ptr(da), Argument::ptr(db), Argument::ptr(dc), Argument::ptr(dd)],
++    )
++    .expect("kernel runs");
++    let mut d = vec![0f32; 128];
++    ctx.read(dd, &mut d);
++    d
++}
++
++fn cases(class: &str) -> Vec<Value> {
++    oracle()["cases"].as_array().unwrap().iter().filter(|c| c["a_fmt"] == "f16" && c["shape"] == serde_json::json!([16, 8, 16]) && c["class"] == class).cloned().collect()
++}
++
++#[test]
++fn exact_cases_match_bit_for_bit() {
++    let cs = cases("exact");
++    assert_eq!(cs.len(), 8);
++    for case in cs {
++        let want: Vec<f32> = floats(&case["expected"]).iter().map(|&x| x as f32).collect();
++        let got = run_case(&case);
++        for (i, (g, w)) in got.iter().zip(&want).enumerate() {
++            assert!((*g == 0.0 && *w == 0.0) || g.to_bits() == w.to_bits(), "{} element {i}: got {g}, want {w}", case["id"]);
++        }
++    }
++}
++
++#[test]
++fn banded_cases_stay_inside_their_band() {
++    let cs = cases("banded");
++    assert_eq!(cs.len(), 12);
++    for case in cs {
++        let (want, band) = (floats(&case["expected"]), floats(&case["band"]));
++        let got = run_case(&case);
++        for i in 0..128 {
++            let err = (got[i] as f64 - want[i]).abs();
++            assert!(err <= band[i], "{} element {i}: error {err:e} exceeds band {:e}", case["id"], band[i]);
++        }
++    }
++}
++
++fn launch(kernel: &str, threads: u32) -> Result<(), String> {
++    let mut ctx = Context::new_with_module(kernel).map_err(|e| e.to_string())?;
++    let (da, db, dc, dd) = (ctx.alloc::<u16>(256), ctx.alloc::<u16>(128), ctx.alloc::<f32>(128), ctx.alloc::<f32>(128));
++    ctx.write(da, &[0u16; 256]);
++    ctx.write(db, &[0u16; 128]);
++    ctx.write(dc, &[0f32; 128]);
++    ctx.run(
++        LaunchParams::func("mma_m16n8k16_f16").grid1d(1).block1d(threads),
++        &[Argument::ptr(da), Argument::ptr(db), Argument::ptr(dc), Argument::ptr(dd)],
++    )
++    .map_err(|e| e.to_string())
++}
++
++#[test]
++fn a_block_smaller_than_a_warp_is_an_error() {
++    let err = launch(KERNEL, 16).unwrap_err();
++    assert!(err.contains("needs all 32 lanes"), "{err}");
++}
++
++#[test]
++fn unsupported_type_combination_is_a_compile_error_not_a_guess() {
++    let kernel = KERNEL.replace("m16n8k16.row.col.f32.f16.f16.f32", "m16n8k16.row.col.f16.f16.f16.f16");
++    let err = launch(&kernel, 32).unwrap_err();
++    assert!(err.contains("implemented only for f32.f16.f16.f32"), "{err}");
++}
++
++#[test]
++fn a_lane_that_exits_before_the_mma_is_reported() {
++    let kernel = KERNEL
++        .replace(".reg .b64 %rd<12>;", ".reg .b64 %rd<12>;\n\t.reg .pred %p<2>;")
++        .replace("\tmma.sync", "\tsetp.lt.u32 %p0, %r8, 16;\n\t@%p0 bra $L_END;\n\tmma.sync")
++        .replace("\tret;", "$L_END:\n\tret;");
++    let err = launch(&kernel, 32).unwrap_err();
++    assert!(err.contains("did not reach the warp-collective instruction"), "{err}");
++}

@@ -461,9 +461,13 @@ visual check against the page in Gate 0b. [verified from the text unless stated]
 - Targets `sm_120`/`sm_120a`/`sm_120f` and `sm_121`/`sm_121a`/`sm_121f` exist.
 - **Maximum statically allocated shared memory is 100 KB on `sm_120a`/`sm_121a`**, versus 228 KB on
   `sm_90a`/`sm_100a`/`sm_110a`. `spark-mem` must enforce 100 KB, not a datacenter figure.
-- The block-scaled `mma` qualifiers `.kind::mxf4nvf4` and `.kind::mxf4` are listed as supported on `sm_120a` and
-  `sm_121a`. So block-scaled FP4 `mma` **is documented for the Spark's target**, closing an earlier open question.
-- `.acc::f16` and the `e4m3/e5m2` `mma` forms are listed for `sm_120a`/`sm_121a`.
+- **Corrected 2026-11-19 (Plan A Task 2, structured parse; see `inventory/OPEN_QUESTIONS.md`).** The first version of
+  this section misattributed two lists found in flattened text. Plain `mma` states block-scale support as "requires
+  `sm_120a`, supported on `sm_120f` or higher in the same family" and **does not name `sm_121a`**. The sentence listing
+  `.kind::mxf4nvf4` and `.kind::mxf4` for `sm_120a` and `sm_121a` belongs to **`mma.sp`** (sparse). The `.acc::f16` and
+  `e4m3/e5m2` lists naming `sm_121a` belong to `multimem.ld_reduce`, not `mma`; plain `mma` says `e4m3`/`e5m2` need
+  `sm_89` or higher. So whether block-scaled FP4 `mma` is documented for the Spark's exact target `sm_121a` is **still
+  open** (does an `a` target inherit the `sm_120f` family grant?).
 - **`cvt.rn.satfinite{.relu}.{e2m1x2/e2m3x2/e3m2x2/ue8m0x2}.f32` and `cvt.rn{.relu}.f16x2.{e2m1x2/e2m3x2/e3m2x2}`:**
   the architecture-specific list names `sm_100a`, `sm_101a` (renamed `sm_110a`) and `sm_120a`, and **does not name
   `sm_121a`**; the family-specific lists name `sm_120f` or higher in the same family (from PTX 8.8). A forum post
@@ -471,3 +475,21 @@ visual check against the page in Gate 0b. [verified from the text unless stated]
   documentation neither clearly confirms nor refutes this; **Gate 0b must resolve it from the page itself**,
   because it decides how FP4 conversion is modelled.
 - `cvt` with `.s2f6x2` is listed for `sm_120a` and `sm_121a`.
+
+
+## 17. Plan A outcome and corrections (2026-11-19)
+
+Plan A (`docs/superpowers/plans/2026-11-18-ounce-spark-plan-a-foundation.md`) is executed on branch `plan-a`; see `docs/superpowers/plans/NEXT.md`.
+Corrections to this document:
+- Section 15 called the two llama.cpp readings [verified]. They were read through a page-summary tool (the raw page returned HTTP 403), so they are
+  `secondary` in `data/spark_decode.csv`.
+- Section 15 counted the 30.3 tok/s Gemma-4 NVFP4 row as "no spec-decoding". The source labels it "SEM spec-decoding" in `results.jsonl` and "no spec"
+  in its prose; the dataset records `unknown` (the Gemma cell median moves from 0.30 to 0.29; nothing else changes).
+- Section 16: the block-scale and `.acc::f16` lists naming `sm_121a` belong to `mma.sp` and `multimem.ld_reduce`; see `inventory/OPEN_QUESTIONS.md`.
+- The Gate 2 spike's decision is **fork ptoxide** (`docs/decisions/0001-ptx-executor.md`); its "hours" are agent wall-clock (about 8 minutes).
+- The noise-floor tool cannot yet produce a usable estimate from the public data (`docs/LIMITS.md`).
+- Whole-branch review corrections: (a) the PTX cvt text **does** define NaN and Inf under `.satfinite` (NaN to positive MAX_NORM for e2m1/e2m3/e3m2;
+  |x| > MAX_NORM to sign-preserved MAX_NORM) and the codec now follows it; (b) the `mma` band uses u = 2^-23 so it also covers truncating
+  accumulators; (c) the inventory now fails loudly if an instruction yields no Target ISA Notes, `mma` no forms, `cvt` no packing statement or an
+  approximate instruction no error bound, and it reads the sin/cos error tables; (d) encode rounding to the *nearer* code is now pinned for every
+  gap of every format.

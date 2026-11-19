@@ -1,0 +1,49 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: python tools/check_governance.py
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip install -r inventory/requirements.txt -r oracles/requirements.txt
+      - run: python -m pytest tests/py
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip install -r inventory/requirements.txt
+      - run: python inventory/fetch_ptx.py
+      - name: extract and compare with the committed inventory (source hash ignored)
+        run: |
+          python - <<'PY'
+          import json, importlib.util, pathlib
+          spec = importlib.util.spec_from_file_location("ex", "inventory/extract_ptx.py")
+          ex = importlib.util.module_from_spec(spec); spec.loader.exec_module(ex)
+          fresh = ex.extract(pathlib.Path(".cache/ptx.html").read_text(errors="replace"))
+          kept = json.load(open("inventory/ptx_sm12x.json"))
+          fresh.pop("source_sha256"); kept.pop("source_sha256")
+          assert fresh == kept, "PTX page changed: regenerate inventory deliberately"
+          PY
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: cargo test --workspace
+  deny:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: EmbarkStudios/cargo-deny-action@v2

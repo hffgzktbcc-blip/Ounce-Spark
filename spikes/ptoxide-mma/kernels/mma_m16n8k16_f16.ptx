@@ -1,0 +1,65 @@
+// Hand-written PTX (no NVIDIA toolchain): one warp computes D = A*B + C with
+// mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32.
+// A: 16x16 f16 row-major. B: 16x8 f16 column-major (element (r,c) at c*16+r). C, D: 16x8 f32 row-major.
+// Lane layout, from the PTX ISA "Matrix Fragments for mma.m16n8k16 with floating point type":
+//   g = laneid >> 2, t = laneid % 4.  a0,a1: row g, cols 2t,2t+1; a2,a3: row g+8; a4..a7: same pairs at col+8.
+//   b0,b1: rows 2t,2t+1, col g; b2,b3: rows +8.  c0,c1: row g, cols 2t,2t+1; c2,c3: row g+8.
+// Every byte offset below is 32*g + 4*t (A, B) or 32*g + 8*t (C, D), and 32*g = (tid - t) * 8.
+.version 8.7
+.target sm_80
+.address_size 64
+
+.visible .entry mma_m16n8k16_f16(
+	.param .u64 param_a,
+	.param .u64 param_b,
+	.param .u64 param_c,
+	.param .u64 param_d
+)
+{
+	.reg .b32 %r<16>;
+	.reg .f32 %f<8>;
+	.reg .b64 %rd<12>;
+
+	ld.param.u64 %rd0, [param_a];
+	ld.param.u64 %rd1, [param_b];
+	ld.param.u64 %rd2, [param_c];
+	ld.param.u64 %rd3, [param_d];
+	cvta.to.global.u64 %rd0, %rd0;
+	cvta.to.global.u64 %rd1, %rd1;
+	cvta.to.global.u64 %rd2, %rd2;
+	cvta.to.global.u64 %rd3, %rd3;
+
+	mov.u32 %r8, %tid.x;
+	and.b32 %r9, %r8, 3;
+	sub.u32 %r10, %r8, %r9;
+	shl.b32 %r11, %r10, 3;
+	shl.b32 %r12, %r9, 2;
+	shl.b32 %r13, %r9, 3;
+	add.u32 %r14, %r11, %r12;
+	cvt.u64.u32 %rd4, %r14;
+	add.u64 %rd5, %rd0, %rd4;
+	ld.global.u32 %r0, [%rd5];
+	ld.global.u32 %r1, [%rd5+256];
+	ld.global.u32 %r2, [%rd5+16];
+	ld.global.u32 %r3, [%rd5+272];
+	add.u64 %rd6, %rd1, %rd4;
+	ld.global.u32 %r4, [%rd6];
+	ld.global.u32 %r5, [%rd6+16];
+
+	add.u32 %r15, %r11, %r13;
+	cvt.u64.u32 %rd7, %r15;
+	add.u64 %rd8, %rd2, %rd7;
+	ld.global.f32 %f0, [%rd8];
+	ld.global.f32 %f1, [%rd8+4];
+	ld.global.f32 %f2, [%rd8+256];
+	ld.global.f32 %f3, [%rd8+260];
+
+	mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 {%f4, %f5, %f6, %f7}, {%r0, %r1, %r2, %r3}, {%r4, %r5}, {%f0, %f1, %f2, %f3};
+
+	add.u64 %rd9, %rd3, %rd7;
+	st.global.f32 [%rd9], %f4;
+	st.global.f32 [%rd9+4], %f5;
+	st.global.f32 [%rd9+256], %f6;
+	st.global.f32 [%rd9+260], %f7;
+	ret;
+}
