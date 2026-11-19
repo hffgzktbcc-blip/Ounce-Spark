@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PTX sm_12x inventory",
+  "type": "object",
+  "required": ["ptx_version", "source_sha256", "targets", "static_smem_kb", "instructions"],
+  "properties": {
+    "ptx_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+$"},
+    "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "targets": {"type": "array", "items": {"type": "string", "pattern": "^sm_12[0-9][af]?$"}},
+    "static_smem_kb": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}},
+    "instructions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "name", "clause", "anchor", "statement"],
+        "properties": {
+          "kind": {"enum": ["target_note", "packing", "error_bound"]},
+          "name": {"type": "string", "minLength": 1},
+          "clause": {"type": "string", "minLength": 1},
+          "anchor": {"type": "string", "minLength": 1},
+          "statement": {"type": "string", "maxLength": 200},
+          "syntax": {"type": "string", "maxLength": 200},
+          "qualifiers": {"type": "array", "items": {"type": "string"}},
+          "requires": {"type": ["string", "null"]},
+          "archs": {"type": "array", "items": {"type": "string"}},
+          "family_archs": {"type": "array", "items": {"type": "string"}},
+          "sm_121a_in_archs": {"type": "boolean"},
+          "family_lists_sm120f": {"type": "boolean"},
+          "first_operand_upper": {"type": ["boolean", "null"]}
+        }
+      }
+    }
+  }
+}

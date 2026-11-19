@@ -1,0 +1,2311 @@
+{
+  "instructions": [
+    {
+      "anchor": "floating-point-instructions-rcp",
+      "archs": [],
+      "clause": "9.7.3.13",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "rcp",
+      "qualifiers": [
+        ".approx",
+        ".f32"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "rcp.approx.f32 supported on all target architectures.",
+      "syntax": "rcp.approx{.ftz}.f32 d, a; // fast, approximate reciprocal rcp.rnd{.ftz}.f32 d, a; // IEEE 754 compliant rounding rcp.rnd.f64 d, a; // IEEE 754 compliant rounding .rnd = { .rn, .rz, .rm, .rp };"
+    },
+    {
+      "anchor": "floating-point-instructions-rcp",
+      "archs": [],
+      "clause": "9.7.3.13",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "rcp",
+      "qualifiers": [
+        ".f32",
+        ".rnd"
+      ],
+      "requires": "sm_20",
+      "sm_121a_in_archs": false,
+      "statement": "rcp.rnd.f32 requires sm_20 or higher.",
+      "syntax": "rcp.approx{.ftz}.f32 d, a; // fast, approximate reciprocal rcp.rnd{.ftz}.f32 d, a; // IEEE 754 compliant rounding rcp.rnd.f64 d, a; // IEEE 754 compliant rounding .rnd = { .rn, .rz, .rm, .rp };"
+    },
+    {
+      "anchor": "floating-point-instructions-rcp",
+      "archs": [],
+      "clause": "9.7.3.13",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "rcp",
+      "qualifiers": [
+        ".f64",
+        ".rn",
+        ".target"
+      ],
+      "requires": "sm_13",
+      "sm_121a_in_archs": false,
+      "statement": "rcp.rn.f64 requires sm_13 or higher, or .target map_f64_to_f32.",
+      "syntax": "rcp.approx{.ftz}.f32 d, a; // fast, approximate reciprocal rcp.rnd{.ftz}.f32 d, a; // IEEE 754 compliant rounding rcp.rnd.f64 d, a; // IEEE 754 compliant rounding .rnd = { .rn, .rz, .rm, .rp };"
+    },
+    {
+      "anchor": "floating-point-instructions-rcp",
+      "archs": [],
+      "clause": "9.7.3.13",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "rcp",
+      "qualifiers": [
+        ".f64"
+      ],
+      "requires": "sm_20",
+      "sm_121a_in_archs": false,
+      "statement": "rcp.{rz,rm,rp}.f64 requires sm_20 or higher.",
+      "syntax": "rcp.approx{.ftz}.f32 d, a; // fast, approximate reciprocal rcp.rnd{.ftz}.f32 d, a; // IEEE 754 compliant rounding rcp.rnd.f64 d, a; // IEEE 754 compliant rounding .rnd = { .rn, .rz, .rm, .rp };"
+    },
+    {
+      "anchor": "floating-point-instructions-rcp",
+      "clause": "9.7.3.13",
+      "kind": "error_bound",
+      "name": "rcp",
+      "statement": "The maximum ulp error is 1 across the full range of inputs."
+    },
+    {
+      "anchor": "floating-point-instructions-sqrt",
+      "archs": [],
+      "clause": "9.7.3.15",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "sqrt",
+      "qualifiers": [
+        ".approx",
+        ".f32"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "sqrt.approx.f32 supported on all target architectures.",
+      "syntax": "sqrt.approx{.ftz}.f32 d, a; // fast, approximate square root sqrt.rnd{.ftz}.f32 d, a; // IEEE 754 compliant rounding sqrt.rnd.f64 d, a; // IEEE 754 compliant rounding .rnd = { .rn, .rz, .rm, .rp };"
+    },
+    {
+      "anchor": "floating-point-instructions-sqrt",
+      "archs": [],
+      "clause": "9.7.3.15",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "sqrt",
+      "qualifiers": [
+        ".f32",
+        ".rnd"
+      ],
+      "requires": "sm_20",
+      "sm_121a_in_archs": false,
+      "statement": "sqrt.rnd.f32 requires sm_20 or higher.",
+      "syntax": "sqrt.approx{.ftz}.f32 d, a; // fast, approximate square root sqrt.rnd{.ftz}.f32 d, a; // IEEE 754 compliant rounding sqrt.rnd.f64 d, a; // IEEE 754 compliant rounding .rnd = { .rn, .rz, .rm, .rp };"
+    },
+    {
+      "anchor": "floating-point-instructions-sqrt",
+      "archs": [],
+      "clause": "9.7.3.15",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "sqrt",
+      "qualifiers": [
+        ".f64",
+        ".rn",
+        ".target"
+      ],
+      "requires": "sm_13",
+      "sm_121a_in_archs": false,
+      "statement": "sqrt.rn.f64 requires sm_13 or higher, or .target map_f64_to_f32 .",
+      "syntax": "sqrt.approx{.ftz}.f32 d, a; // fast, approximate square root sqrt.rnd{.ftz}.f32 d, a; // IEEE 754 compliant rounding sqrt.rnd.f64 d, a; // IEEE 754 compliant rounding .rnd = { .rn, .rz, .rm, .rp };"
+    },
+    {
+      "anchor": "floating-point-instructions-sqrt",
+      "archs": [],
+      "clause": "9.7.3.15",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "sqrt",
+      "qualifiers": [
+        ".f64"
+      ],
+      "requires": "sm_20",
+      "sm_121a_in_archs": false,
+      "statement": "sqrt.{rz,rm,rp}.f64 requires sm_20 or higher.",
+      "syntax": "sqrt.approx{.ftz}.f32 d, a; // fast, approximate square root sqrt.rnd{.ftz}.f32 d, a; // IEEE 754 compliant rounding sqrt.rnd.f64 d, a; // IEEE 754 compliant rounding .rnd = { .rn, .rz, .rm, .rp };"
+    },
+    {
+      "anchor": "floating-point-instructions-sqrt",
+      "clause": "9.7.3.15",
+      "kind": "error_bound",
+      "name": "sqrt",
+      "statement": "The maximum relative error over the entire positive finite floating-point range is 2 -23 ."
+    },
+    {
+      "anchor": "floating-point-instructions-rsqrt",
+      "archs": [],
+      "clause": "9.7.3.16",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "rsqrt",
+      "qualifiers": [
+        ".f32"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "rsqrt.f32 supported on all target architectures.",
+      "syntax": "rsqrt.approx{.ftz}.f32 d, a; rsqrt.approx.f64 d, a;"
+    },
+    {
+      "anchor": "floating-point-instructions-rsqrt",
+      "archs": [],
+      "clause": "9.7.3.16",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "rsqrt",
+      "qualifiers": [
+        ".f64"
+      ],
+      "requires": "sm_13",
+      "sm_121a_in_archs": false,
+      "statement": "rsqrt.f64 requires sm_13 or higher.",
+      "syntax": "rsqrt.approx{.ftz}.f32 d, a; rsqrt.approx.f64 d, a;"
+    },
+    {
+      "anchor": "floating-point-instructions-rsqrt",
+      "clause": "9.7.3.16",
+      "kind": "error_bound",
+      "name": "rsqrt",
+      "statement": "The maximum relative error for rsqrt.f32 over the entire positive finite floating-point range is 2 -22.9 ."
+    },
+    {
+      "anchor": "floating-point-instructions-sin",
+      "archs": [],
+      "clause": "9.7.3.18",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "sin",
+      "qualifiers": [],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Supported on all target architectures.",
+      "syntax": "sin.approx{.2pi}{.ftz}.f32 d, a;"
+    },
+    {
+      "anchor": "floating-point-instructions-cos",
+      "archs": [],
+      "clause": "9.7.3.19",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cos",
+      "qualifiers": [],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Supported on all target architectures.",
+      "syntax": "cos.approx{.2pi}{.ftz}.f32 d, a;"
+    },
+    {
+      "anchor": "floating-point-instructions-lg2",
+      "archs": [],
+      "clause": "9.7.3.20",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "lg2",
+      "qualifiers": [],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Supported on all target architectures.",
+      "syntax": "lg2.approx{.ftz}.f32 d, a;"
+    },
+    {
+      "anchor": "floating-point-instructions-lg2",
+      "clause": "9.7.3.20",
+      "kind": "error_bound",
+      "name": "lg2",
+      "statement": "The maximum absolute error is 2 -22 when the input operand is in the range (0.5, 2). For positive finite inputs outside of this interval, maximum relative error is 2 -22 ."
+    },
+    {
+      "anchor": "floating-point-instructions-ex2",
+      "archs": [],
+      "clause": "9.7.3.21",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "ex2",
+      "qualifiers": [],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Supported on all target architectures.",
+      "syntax": "ex2.approx{.ftz}.f32 d, a;"
+    },
+    {
+      "anchor": "floating-point-instructions-ex2",
+      "clause": "9.7.3.21",
+      "kind": "error_bound",
+      "name": "ex2",
+      "statement": "The maximum ulp error is 2 ulp from correctly rounded result across the full range of inputs."
+    },
+    {
+      "anchor": "floating-point-instructions-tanh",
+      "archs": [],
+      "clause": "9.7.3.22",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "tanh",
+      "qualifiers": [],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Requires sm_75 or higher.",
+      "syntax": "tanh.approx.f32 d, a;"
+    },
+    {
+      "anchor": "floating-point-instructions-tanh",
+      "clause": "9.7.3.22",
+      "kind": "error_bound",
+      "name": "tanh",
+      "statement": "The maximum relative error over the entire floating point range is 2 -11 ."
+    },
+    {
+      "anchor": "half-precision-floating-point-instructions-tanh",
+      "archs": [],
+      "clause": "9.7.4.9",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "tanh",
+      "qualifiers": [],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Requires sm_75 or higher.",
+      "syntax": "tanh.approx.type d, a; .type = {.f16, .f16x2, .bf16, .bf16x2}"
+    },
+    {
+      "anchor": "half-precision-floating-point-instructions-tanh",
+      "archs": [],
+      "clause": "9.7.4.9",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "tanh",
+      "qualifiers": [
+        ".approx"
+      ],
+      "requires": "sm_90",
+      "sm_121a_in_archs": false,
+      "statement": "tanh.approx.{bf16/bf16x2} requires sm_90 or higher.",
+      "syntax": "tanh.approx.type d, a; .type = {.f16, .f16x2, .bf16, .bf16x2}"
+    },
+    {
+      "anchor": "half-precision-floating-point-instructions-tanh",
+      "clause": "9.7.4.9",
+      "kind": "error_bound",
+      "name": "tanh",
+      "statement": "The maximum absolute error for .f16 type is 2 -10.987 . The maximum absolute error for .bf16 type is 2 -8 ."
+    },
+    {
+      "anchor": "half-precision-floating-point-instructions-ex2",
+      "archs": [],
+      "clause": "9.7.4.10",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "ex2",
+      "qualifiers": [],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Requires sm_75 or higher.",
+      "syntax": "ex2.approx.atype d, a; ex2.approx.ftz.btype d, a; .atype = { .f16, .f16x2} .btype = { .bf16, .bf16x2}"
+    },
+    {
+      "anchor": "half-precision-floating-point-instructions-ex2",
+      "archs": [],
+      "clause": "9.7.4.10",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "ex2",
+      "qualifiers": [
+        ".approx",
+        ".ftz"
+      ],
+      "requires": "sm_90",
+      "sm_121a_in_archs": false,
+      "statement": "ex2.approx.ftz.{bf16/bf16x2} requires sm_90 or higher.",
+      "syntax": "ex2.approx.atype d, a; ex2.approx.ftz.btype d, a; .atype = { .f16, .f16x2} .btype = { .bf16, .bf16x2}"
+    },
+    {
+      "anchor": "half-precision-floating-point-instructions-ex2",
+      "clause": "9.7.4.10",
+      "kind": "error_bound",
+      "name": "ex2",
+      "statement": "The maximum relative error for .f16 type is 2 -9.9 . The maximum relative error for .bf16 type is 2 -7 ."
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-shfl-sync",
+      "archs": [],
+      "clause": "9.7.10.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "shfl.sync",
+      "qualifiers": [],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Requires sm_30 or higher.",
+      "syntax": "shfl.sync.mode.b32 d[|p], a, b, c, membermask; .mode = { .up, .down, .bfly, .idx };"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [],
+      "clause": "9.7.10.24",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".f64"
+      ],
+      "requires": "sm_13",
+      "sm_121a_in_archs": false,
+      "statement": "cvt to or from .f64 requires sm_13 or higher.",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [],
+      "clause": "9.7.10.24",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".bf16",
+        ".bf16x2",
+        ".f16x2",
+        ".relu",
+        ".tf32"
+      ],
+      "requires": "sm_80",
+      "sm_121a_in_archs": false,
+      "statement": ".relu modifier and { .f16x2 , .bf16 , .bf16x2 , .tf32 } destination formats require sm_80 or higher.",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [],
+      "clause": "9.7.10.24",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".bf16",
+        ".f32"
+      ],
+      "requires": "sm_80",
+      "sm_121a_in_archs": false,
+      "statement": "cvt.f32.bf16 requires sm_80 or higher.",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [],
+      "clause": "9.7.10.24",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".bf16",
+        ".f32",
+        ".tf32"
+      ],
+      "requires": "sm_90",
+      "sm_121a_in_archs": false,
+      "statement": "cvt.bf16.{u8/s8/u16/s16/u32/s32/u64/s64/f16/f64/bf16} , cvt.{u8/s8/u16/s16/u32/s32/u64/s64/f16/f64}.bf16 , and cvt.tf32.f32.{relu}.{rn/rz} require sm_90 or higher.",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [],
+      "clause": "9.7.10.24",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".bf16",
+        ".f32",
+        ".ftz"
+      ],
+      "requires": "sm_90",
+      "sm_121a_in_archs": false,
+      "statement": ".ftz qualifier for cvt.f32.bf16 requires sm_90 or higher.",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [],
+      "clause": "9.7.10.24",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".e4m3x2",
+        ".e5m2x2"
+      ],
+      "requires": "sm_89",
+      "sm_121a_in_archs": false,
+      "statement": "cvt with .e4m3x2 / .e5m2x2 requires sm89 or higher.",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [],
+      "clause": "9.7.10.24",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".satfinite"
+      ],
+      "requires": "sm_89",
+      "sm_121a_in_archs": false,
+      "statement": "cvt.satfinite.{e4m3x2, e5m2x2}.{f32, f16x2} requires sm_89 or higher.",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [],
+      "clause": "9.7.10.24",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".f32",
+        ".satfinite",
+        ".tf32"
+      ],
+      "requires": "sm_100",
+      "sm_121a_in_archs": false,
+      "statement": "cvt.{rn/rz}.satfinite.tf32.f32 requires sm_100 or higher.",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [
+        "sm_100a",
+        "sm_101a",
+        "sm_120a"
+      ],
+      "clause": "9.7.10.24",
+      "family_archs": [
+        "sm_100f",
+        "sm_101f",
+        "sm_120f",
+        "sm_110f"
+      ],
+      "family_lists_sm120f": true,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".f32",
+        ".relu",
+        ".rn",
+        ".satfinite"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "cvt.rn.satfinite{.relu}.{e2m1x2/e2m3x2/e3m2x2/ue8m0x2}.f32 is supported on following architectures:",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [
+        "sm_100a",
+        "sm_101a",
+        "sm_120a"
+      ],
+      "clause": "9.7.10.24",
+      "family_archs": [
+        "sm_100f",
+        "sm_101f",
+        "sm_120f",
+        "sm_110f"
+      ],
+      "family_lists_sm120f": true,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".f16x2",
+        ".relu",
+        ".rn"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "cvt.rn{.relu}.f16x2.{e2m1x2/e2m3x2/e3m2x2} is supported on following architectures:",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [
+        "sm_100a",
+        "sm_101a",
+        "sm_120a"
+      ],
+      "clause": "9.7.10.24",
+      "family_archs": [
+        "sm_100f",
+        "sm_101f",
+        "sm_120f",
+        "sm_110f"
+      ],
+      "family_lists_sm120f": true,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".bf16x2",
+        ".relu",
+        ".satfinite",
+        ".ue8m0x2"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "cvt.{rz/rp}{.satfinite}{.relu}.ue8m0x2.bf16x2 is supported on following architectures:",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [
+        "sm_100a",
+        "sm_101a",
+        "sm_120a"
+      ],
+      "clause": "9.7.10.24",
+      "family_archs": [
+        "sm_100f",
+        "sm_101f",
+        "sm_120f",
+        "sm_110f"
+      ],
+      "family_lists_sm120f": true,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".f32",
+        ".satfinite",
+        ".ue8m0x2"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "cvt.{rz/rp}.satfinite.ue8m0x2.f32 is supported on following architectures:",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [
+        "sm_100a",
+        "sm_101a",
+        "sm_120a"
+      ],
+      "clause": "9.7.10.24",
+      "family_archs": [
+        "sm_100f",
+        "sm_101f",
+        "sm_120f",
+        "sm_110f"
+      ],
+      "family_lists_sm120f": true,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".bf16x2",
+        ".rn",
+        ".ue8m0x2"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "cvt.rn.bf16x2.ue8m0x2 is supported on following architectures:",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [
+        "sm_100a",
+        "sm_103a",
+        "sm_107a"
+      ],
+      "clause": "9.7.10.24",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".rs"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": ".rs rounding mode is supported on following architectures:",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [
+        "sm_100a",
+        "sm_103a",
+        "sm_107a"
+      ],
+      "clause": "9.7.10.24",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".e2m1x4",
+        ".e2m3x4",
+        ".e3m2x4",
+        ".e4m3x4",
+        ".e5m2x4",
+        ".f32",
+        ".rs"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "cvt.rs{.e2m1x4/.e4m3x4/.e5m2x4/.e3m2x4/.e2m3x4}.f32 is supported on following architectures:",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [],
+      "clause": "9.7.10.24",
+      "family_archs": [
+        "sm_100f",
+        "sm_110f",
+        "sm_120f"
+      ],
+      "family_lists_sm120f": true,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".bf16x2",
+        ".e4m3x2",
+        ".e5m2x2",
+        ".relu",
+        ".rn",
+        ".satfinite"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "cvt.rn.satfinite{.relu}{.e5m2x2/.e4m3x2}{.bf16x2} is supported on following family-specific architectures:",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [],
+      "clause": "9.7.10.24",
+      "family_archs": [
+        "sm_100f",
+        "sm_110f",
+        "sm_120f"
+      ],
+      "family_lists_sm120f": true,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".bf16x2",
+        ".e2m1x2",
+        ".e2m3x2",
+        ".e3m2x2",
+        ".f16x2",
+        ".relu",
+        ".rn",
+        ".satfinite"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "cvt.rn.satfinite{.relu}{.e2m3x2/.e3m2x2/.e2m1x2}{.f16x2/.bf16x2} is supported on following family-specific architectures:",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [
+        "sm_100a",
+        "sm_103a",
+        "sm_107a",
+        "sm_110a",
+        "sm_120a",
+        "sm_121a"
+      ],
+      "clause": "9.7.10.24",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".s2f6x2"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": true,
+      "statement": "cvt with .s2f6x2 instruction type is supported on following architectures:",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [],
+      "clause": "9.7.10.24",
+      "family_archs": [
+        "sm_100f",
+        "sm_110f",
+        "sm_120f"
+      ],
+      "family_lists_sm120f": true,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".bf16x2",
+        ".e2m1x2",
+        ".e2m3x2",
+        ".e3m2x2",
+        ".e4m3x2",
+        ".e5m2x2",
+        ".relu",
+        ".rn",
+        ".satfinite"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "cvt.rn{.satfinite}{.relu}.bf16x2{.e4m3x2/.e5m2x2/.e3m2x2/.e2m3x2/.e2m1x2} is supported on following family-specific architectures:",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [],
+      "clause": "9.7.10.24",
+      "family_archs": [
+        "sm_107f"
+      ],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".rz"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": ".rz rounding mode on cvt.{e4m3x2, e5m2x2, e2m3x2, e3m2x2, e2m1x2}.{f32/f16x2/bf16x2} is supported on following family-specific architectures:",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [],
+      "clause": "9.7.10.24",
+      "family_archs": [
+        "sm_107f"
+      ],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".pzo"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": ".pzo qualifier is supported on following family-specific architectures:",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [],
+      "clause": "9.7.10.24",
+      "family_archs": [
+        "sm_107f"
+      ],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".scaled::n1::ue8m0"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": ".scaled::n1::ue8m0 qualifier is supported on following family-specific architectures:",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "archs": [],
+      "clause": "9.7.10.24",
+      "family_archs": [
+        "sm_107f"
+      ],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt",
+      "qualifiers": [
+        ".ue5m3x2"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "cvt with .ue5m3x2 instruction type is supported on following family-specific architectures:",
+      "syntax": "cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a; // integer rounding cvt{.frnd}{.ftz}{.sat}.dtype.atype d, a; // fp rounding cvt.frnd2{.relu}{.satfinite}{.pzo}.f16.f32 d, a; cvt.frnd2{.relu}{.satfinite}{.pzo\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "clause": "9.7.10.24",
+      "first_operand_upper": true,
+      "kind": "packing",
+      "name": "cvt",
+      "statement": "For .f16x2 and .bf16x2 instruction type, two inputs a and b of .f32 type are converted into .f16 or .bf16 type and the converted values are packed in the destination register d , such that the value \u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "clause": "9.7.10.24",
+      "first_operand_upper": true,
+      "kind": "packing",
+      "name": "cvt",
+      "statement": "When converting to .e4m3x2 / .e5m2x2 / .ue5m3x2 data formats, the destination operand d has .b16 type. When converting two .f32 inputs to .e4m3x2 / .e5m2x2 / .ue5m3x2 , each input is converted to the\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "clause": "9.7.10.24",
+      "first_operand_upper": null,
+      "kind": "packing",
+      "name": "cvt",
+      "statement": "When converting from .e4m3x2 / .e5m2x2 / .ue5m3x2 to .f16x2 / .bf16x2 , source operand a has .b16 type. Each 8-bit input value in operand a is converted to .f16 / .bf16 type. The converted values are\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "clause": "9.7.10.24",
+      "first_operand_upper": true,
+      "kind": "packing",
+      "name": "cvt",
+      "statement": "When converting to .e2m1x2 data formats, the destination operand d has .b8 type. When converting two .f32 inputs to .e2m1x2 , each input is converted to the specified format, and the converted values\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "clause": "9.7.10.24",
+      "first_operand_upper": null,
+      "kind": "packing",
+      "name": "cvt",
+      "statement": "When converting from .e2m1x2 to .f16x2 / .bf16x2 , source operand a has .b8 type. Each 4-bit input value in operand a is converted to .f16 / .bf16 type. The converted values are packed in the destina\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "clause": "9.7.10.24",
+      "first_operand_upper": null,
+      "kind": "packing",
+      "name": "cvt",
+      "statement": "When converting to .e2m1x4 data format, the destination operand d has .b16 type. When converting four .f32 inputs to .e2m1x4 , each input is converted to the specified format, and the converted value\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "clause": "9.7.10.24",
+      "first_operand_upper": true,
+      "kind": "packing",
+      "name": "cvt",
+      "statement": "When converting to .e2m3x2 / .e3m2x2 data formats, the destination operand d has .b16 type. When converting two .f32 inputs to .e2m3x2 / .e3m2x2 , each input is converted to the specified format, and\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "clause": "9.7.10.24",
+      "first_operand_upper": null,
+      "kind": "packing",
+      "name": "cvt",
+      "statement": "When converting from .e2m3x2 / .e3m2x2 to .f16x2 / .bf16x2 , source operand a has .b16 type. Each 8-bit input value with 2 MSB bits 0 in operand a is converted to .f16 / .bf16 type. The converted val\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "clause": "9.7.10.24",
+      "first_operand_upper": null,
+      "kind": "packing",
+      "name": "cvt",
+      "statement": "When converting to .e5m2x4 / .e4m3x4 / .e3m2x4 / .e2m3x4 data format, the destination operand d has .b32 type. When converting four .f32 inputs to .e5m2x4 / .e4m3x4 / .e3m2x4 / .e2m3x4 , each input i\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "clause": "9.7.10.24",
+      "first_operand_upper": true,
+      "kind": "packing",
+      "name": "cvt",
+      "statement": "When converting to .ue8m0x2 data formats, the destination operand d has .b16 type. When converting two .f32 or two packed .bf16 inputs to .ue8m0x2 , each input is converted to the specified format, a\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "clause": "9.7.10.24",
+      "first_operand_upper": null,
+      "kind": "packing",
+      "name": "cvt",
+      "statement": "When converting from .ue8m0x2 / .ue5m3x2 to .bf16x2 , source operand a has .b16 type. Each 8-bit input value in operand a is converted to .bf16 type. The converted values are packed in the destinatio\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "clause": "9.7.10.24",
+      "first_operand_upper": true,
+      "kind": "packing",
+      "name": "cvt",
+      "statement": "When converting to .s2f6x2 data formats, the destination operand d has .b16 type. When converting two .f32 inputs to .s2f6x2 , each input is converted to the .s2f6 value, and the converted values are\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt",
+      "clause": "9.7.10.24",
+      "first_operand_upper": null,
+      "kind": "packing",
+      "name": "cvt",
+      "statement": "When converting from .s2f6x2 to .bf16x2 , source operand a has .b16 type. Each 8-bit input value in operand a is converted to .bf16 type. The converted values are packed in the destination operand d \u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt-pack",
+      "archs": [],
+      "clause": "9.7.10.25",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt.pack",
+      "qualifiers": [],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Requires sm_72 or higher.",
+      "syntax": "cvt.pack.sat.convertType.abType d, a, b; .convertType = { .u16, .s16 } .abType = { .s32 } cvt.pack.sat.convertType.abType.cType d, a, b, c; .convertType = { .u2, .s2, .u4, .s4, .u8, .s8 } .abType = {\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt-pack",
+      "archs": [],
+      "clause": "9.7.10.25",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cvt.pack",
+      "qualifiers": [
+        ".s2",
+        ".s4",
+        ".u2",
+        ".u4"
+      ],
+      "requires": "sm_75",
+      "sm_121a_in_archs": false,
+      "statement": "Sub byte types ( .u4 / .s4 and .u2 / .s2 ) requires sm_75 or higher.",
+      "syntax": "cvt.pack.sat.convertType.abType d, a, b; .convertType = { .u16, .s16 } .abType = { .s32 } cvt.pack.sat.convertType.abType.cType d, a, b, c; .convertType = { .u2, .s2, .u4, .s4, .u8, .s8 } .abType = {\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cvt-pack",
+      "clause": "9.7.10.25",
+      "first_operand_upper": null,
+      "kind": "packing",
+      "name": "cvt.pack",
+      "statement": "The inputs a and b are converted to values of type specified by .convertType with saturation and the results after conversion are packed into lower bits of d ."
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cp-async",
+      "archs": [],
+      "clause": "9.7.10.28.3.1",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cp.async",
+      "qualifiers": [],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Requires sm_80 or higher.",
+      "syntax": "cp.async.ca.shared{::cta}.global{.level::cache_hint}{.level::prefetch_size} [dst], [src], cp-size{, src-size}{, cache_policy} ; cp.async.cg.shared{::cta}.global{.level::cache_hint}{.level::prefetch_s\u2026"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-cp-async",
+      "archs": [],
+      "clause": "9.7.10.28.3.1",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "cp.async",
+      "qualifiers": [],
+      "requires": "sm_30",
+      "sm_121a_in_archs": false,
+      "statement": "Sub-qualifier ::cta requires sm_30 or higher.",
+      "syntax": "cp.async.ca.shared{::cta}.global{.level::cache_hint}{.level::prefetch_size} [dst], [src], cp-size{, src-size}{, cache_policy} ; cp.async.cg.shared{::cta}.global{.level::cache_hint}{.level::prefetch_s\u2026"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-bar",
+      "archs": [],
+      "clause": "9.7.15.1",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "bar",
+      "qualifiers": [
+        ".cta"
+      ],
+      "requires": "sm_20",
+      "sm_121a_in_archs": false,
+      "statement": "Register operands, thread count, and bar{.cta}.{arrive,red} require sm_20 or higher.",
+      "syntax": "barrier{.cta}.sync{.aligned} a{, b}; barrier{.cta}.arrive{.aligned} a, b; barrier{.cta}.red.popc{.aligned}.u32 d, a{, b}, {!}c; barrier{.cta}.red.op{.aligned}.pred p, a{, b}, {!}c; bar{.cta}.sync a{,\u2026"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-bar",
+      "archs": [],
+      "clause": "9.7.15.1",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "bar",
+      "qualifiers": [
+        ".cta",
+        ".sync"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Only bar{.cta}.sync with an immediate barrier number is supported for sm_1x targets.",
+      "syntax": "barrier{.cta}.sync{.aligned} a{, b}; barrier{.cta}.arrive{.aligned} a, b; barrier{.cta}.red.popc{.aligned}.u32 d, a{, b}, {!}c; barrier{.cta}.red.op{.aligned}.pred p, a{, b}, {!}c; bar{.cta}.sync a{,\u2026"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-bar",
+      "archs": [],
+      "clause": "9.7.15.1",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "bar",
+      "qualifiers": [
+        ".cta"
+      ],
+      "requires": "sm_30",
+      "sm_121a_in_archs": false,
+      "statement": "barrier{.cta} instruction requires sm_30 or higher.",
+      "syntax": "barrier{.cta}.sync{.aligned} a{, b}; barrier{.cta}.arrive{.aligned} a, b; barrier{.cta}.red.popc{.aligned}.u32 d, a{, b}, {!}c; barrier{.cta}.red.op{.aligned}.pred p, a{, b}, {!}c; bar{.cta}.sync a{,\u2026"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [
+        ".global"
+      ],
+      "requires": "sm_11",
+      "sm_121a_in_archs": false,
+      "statement": "atom.global requires sm_11 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [
+        ".shared"
+      ],
+      "requires": "sm_12",
+      "sm_121a_in_archs": false,
+      "statement": "atom.shared requires sm_12 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [
+        ".global"
+      ],
+      "requires": "sm_12",
+      "sm_121a_in_archs": false,
+      "statement": "64-bit atom.global.{add,cas,exch} require sm_12 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [
+        ".shared"
+      ],
+      "requires": "sm_20",
+      "sm_121a_in_archs": false,
+      "statement": "64-bit atom.shared.{add,cas,exch} require sm_20 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [],
+      "requires": "sm_32",
+      "sm_121a_in_archs": false,
+      "statement": "64-bit atom.{and,or,xor,min,max} require sm_32 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [
+        ".add",
+        ".f32"
+      ],
+      "requires": "sm_20",
+      "sm_121a_in_archs": false,
+      "statement": "atom.add.f32 requires sm_20 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [
+        ".add",
+        ".f64"
+      ],
+      "requires": "sm_60",
+      "sm_121a_in_archs": false,
+      "statement": "atom.add.f64 requires sm_60 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [
+        ".scope"
+      ],
+      "requires": "sm_60",
+      "sm_121a_in_archs": false,
+      "statement": ".scope qualifier requires sm_60 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [
+        ".sem"
+      ],
+      "requires": "sm_70",
+      "sm_121a_in_archs": false,
+      "statement": ".sem qualifier requires sm_70 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [],
+      "requires": "sm_20",
+      "sm_121a_in_archs": false,
+      "statement": "Use of generic addressing requires sm_20 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [
+        ".add",
+        ".f16x2",
+        ".noftz"
+      ],
+      "requires": "sm_60",
+      "sm_121a_in_archs": false,
+      "statement": "atom.add.noftz.f16x2 requires sm_60 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [
+        ".add",
+        ".b16",
+        ".cas",
+        ".f16",
+        ".noftz"
+      ],
+      "requires": "sm_70",
+      "sm_121a_in_archs": false,
+      "statement": "atom.add.noftz.f16 and atom.cas.b16 requires sm_70 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [
+        ".level::cache_hint"
+      ],
+      "requires": "sm_80",
+      "sm_121a_in_archs": false,
+      "statement": "Support for .level::cache_hint qualifier requires sm_80 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [
+        ".add",
+        ".bf16",
+        ".bf16x2",
+        ".noftz"
+      ],
+      "requires": "sm_90",
+      "sm_121a_in_archs": false,
+      "statement": "atom.add.noftz.bf16 and atom.add.noftz.bf16x2 require sm_90 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [
+        ".cluster"
+      ],
+      "requires": "sm_90",
+      "sm_121a_in_archs": false,
+      "statement": "Support for .cluster scope qualifier requires sm_90 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [],
+      "requires": "sm_30",
+      "sm_121a_in_archs": false,
+      "statement": "Sub-qualifier ::cta requires sm_30 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [],
+      "requires": "sm_90",
+      "sm_121a_in_archs": false,
+      "statement": "Sub-qualifier ::cluster requires sm_90 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [],
+      "requires": "sm_90",
+      "sm_121a_in_archs": false,
+      "statement": "Support for vector types requires sm_90 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [
+        ".b128"
+      ],
+      "requires": "sm_90",
+      "sm_121a_in_archs": false,
+      "statement": "Support for .b128 type requires sm_90 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-atom",
+      "archs": [],
+      "clause": "9.7.15.5",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "atom",
+      "qualifiers": [
+        ".f32",
+        ".noftz"
+      ],
+      "requires": "sm_90",
+      "sm_121a_in_archs": false,
+      "statement": "Support for .noftz with .f32 type requires sm_90 or higher.",
+      "syntax": "Atomic operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [
+        ".global"
+      ],
+      "requires": "sm_11",
+      "sm_121a_in_archs": false,
+      "statement": "red.global requires sm_11 or higher",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [
+        ".shared"
+      ],
+      "requires": "sm_12",
+      "sm_121a_in_archs": false,
+      "statement": "red.shared requires sm_12 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [
+        ".add",
+        ".global",
+        ".u64"
+      ],
+      "requires": "sm_12",
+      "sm_121a_in_archs": false,
+      "statement": "red.global.add.u64 requires sm_12 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [
+        ".add",
+        ".shared",
+        ".u64"
+      ],
+      "requires": "sm_20",
+      "sm_121a_in_archs": false,
+      "statement": "red.shared.add.u64 requires sm_20 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [],
+      "requires": "sm_32",
+      "sm_121a_in_archs": false,
+      "statement": "64-bit red.{and,or,xor,min,max} require sm_32 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [
+        ".add",
+        ".f32"
+      ],
+      "requires": "sm_20",
+      "sm_121a_in_archs": false,
+      "statement": "red.add.f32 requires sm_20 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [
+        ".add",
+        ".f64"
+      ],
+      "requires": "sm_60",
+      "sm_121a_in_archs": false,
+      "statement": "red.add.f64 requires sm_60 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [
+        ".scope"
+      ],
+      "requires": "sm_60",
+      "sm_121a_in_archs": false,
+      "statement": ".scope qualifier requires sm_60 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [
+        ".sem"
+      ],
+      "requires": "sm_70",
+      "sm_121a_in_archs": false,
+      "statement": ".sem qualifier requires sm_70 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [],
+      "requires": "sm_20",
+      "sm_121a_in_archs": false,
+      "statement": "Use of generic addressing requires sm_20 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [
+        ".add",
+        ".f16x2",
+        ".noftz"
+      ],
+      "requires": "sm_60",
+      "sm_121a_in_archs": false,
+      "statement": "red.add.noftz.f16x2 requires sm_60 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [
+        ".add",
+        ".f16",
+        ".noftz"
+      ],
+      "requires": "sm_70",
+      "sm_121a_in_archs": false,
+      "statement": "red.add.noftz.f16 requires sm_70 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [
+        ".level::cache_hint"
+      ],
+      "requires": "sm_80",
+      "sm_121a_in_archs": false,
+      "statement": "Support for .level::cache_hint qualifier requires sm_80 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [
+        ".add",
+        ".bf16",
+        ".bf16x2",
+        ".noftz"
+      ],
+      "requires": "sm_90",
+      "sm_121a_in_archs": false,
+      "statement": "red.add.noftz.bf16 and red.add.noftz.bf16x2 require sm_90 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [
+        ".cluster"
+      ],
+      "requires": "sm_90",
+      "sm_121a_in_archs": false,
+      "statement": "Support for .cluster scope qualifier requires sm_90 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [],
+      "requires": "sm_30",
+      "sm_121a_in_archs": false,
+      "statement": "Sub-qualifier ::cta requires sm_30 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [],
+      "requires": "sm_90",
+      "sm_121a_in_archs": false,
+      "statement": "Sub-qualifier ::cluster requires sm_90 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [],
+      "requires": "sm_90",
+      "sm_121a_in_archs": false,
+      "statement": "Support for vector types requires sm_90 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "parallel-synchronization-and-communication-instructions-red",
+      "archs": [],
+      "clause": "9.7.15.6",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "red",
+      "qualifiers": [
+        ".f32",
+        ".noftz"
+      ],
+      "requires": "sm_90",
+      "sm_121a_in_archs": false,
+      "statement": "Support for .noftz with .f32 type requires sm_90 or higher.",
+      "syntax": "Reduction operation with scalar type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [],
+      "clause": "9.7.16.5.14",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Requires sm_70 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [],
+      "clause": "9.7.16.5.14",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".f16",
+        ".m8n8k4"
+      ],
+      "requires": "sm_70",
+      "sm_121a_in_archs": false,
+      "statement": ".f16 floating point type mma operation with .m8n8k4 shape requires sm_70 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [],
+      "clause": "9.7.16.5.14",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".f16",
+        ".m16n8k8"
+      ],
+      "requires": "sm_75",
+      "sm_121a_in_archs": false,
+      "statement": ".f16 floating point type mma operation with .m16n8k8 shape requires sm_75 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [],
+      "clause": "9.7.16.5.14",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".m8n8k16",
+        ".s8",
+        ".u8"
+      ],
+      "requires": "sm_75",
+      "sm_121a_in_archs": false,
+      "statement": ".u8/.s8 integer type mma operation with .m8n8k16 shape requires sm_75 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [],
+      "clause": "9.7.16.5.14",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".m8n8k32",
+        ".s4",
+        ".u4"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": ".u4/.s4 integer type mma operation with .m8n8k32 shape sm_75 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [],
+      "clause": "9.7.16.5.14",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".b1",
+        ".m8n8k128"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": ".b1 single-bit integer type mma operation with .m8n8k128 shape sm_75 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [],
+      "clause": "9.7.16.5.14",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".f64",
+        ".m8n8k4"
+      ],
+      "requires": "sm_80",
+      "sm_121a_in_archs": false,
+      "statement": ".f64 floating point type mma operation with .m8n8k4 shape requires sm_80 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [],
+      "clause": "9.7.16.5.14",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".f16",
+        ".m16n8k16"
+      ],
+      "requires": "sm_80",
+      "sm_121a_in_archs": false,
+      "statement": ".f16 floating point type mma operation with .m16n8k16 shape requires sm_80 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [],
+      "clause": "9.7.16.5.14",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".bf16",
+        ".m16n8k16",
+        ".m16n8k8"
+      ],
+      "requires": "sm_80",
+      "sm_121a_in_archs": false,
+      "statement": ".bf16 alternate floating point type mma operation with .m16n8k8 and .m16n8k16 shapes requires sm_80 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [],
+      "clause": "9.7.16.5.14",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".m16n8k4",
+        ".m16n8k8",
+        ".tf32"
+      ],
+      "requires": "sm_80",
+      "sm_121a_in_archs": false,
+      "statement": ".tf32 alternate floating point type mma operation with .m16n8k4 and .m16n8k8 shapes requires sm_80 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [],
+      "clause": "9.7.16.5.14",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".m16n8k16",
+        ".m16n8k32",
+        ".s8",
+        ".u8"
+      ],
+      "requires": "sm_80",
+      "sm_121a_in_archs": false,
+      "statement": ".u8/.s8 integer type mma operation with .m16n8k16 and .m16n8k32 shapes requires sm_80 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [],
+      "clause": "9.7.16.5.14",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".m16n8k32",
+        ".m16n8k64",
+        ".s4",
+        ".u4"
+      ],
+      "requires": "sm_80",
+      "sm_121a_in_archs": false,
+      "statement": ".u4/.s4 integer type mma operation with .m16n8k32 and .m16n8k64 shapes requires sm_80 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [],
+      "clause": "9.7.16.5.14",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".b1",
+        ".m16n8k128",
+        ".m16n8k256"
+      ],
+      "requires": "sm_80",
+      "sm_121a_in_archs": false,
+      "statement": ".b1 single-bit integer type mma operation with .m16n8k128 and .m16n8k256 shapes requires sm_80 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [],
+      "clause": "9.7.16.5.14",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".and"
+      ],
+      "requires": "sm_80",
+      "sm_121a_in_archs": false,
+      "statement": ".and operation in single-bit mma requires sm_80 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [],
+      "clause": "9.7.16.5.14",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".f64",
+        ".m16n8k16",
+        ".m16n8k4",
+        ".m16n8k8"
+      ],
+      "requires": "sm_90",
+      "sm_121a_in_archs": false,
+      "statement": ".f64 floating point type mma operation with .m16n8k4 , .m16n8k8 , and .m16n8k16 shapes require sm_90 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [],
+      "clause": "9.7.16.5.14",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".e4m3",
+        ".e5m2"
+      ],
+      "requires": "sm_89",
+      "sm_121a_in_archs": false,
+      "statement": ".e4m3 and .e5m2 alternate floating point type mma operation requires sm_89 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [
+        "sm_120a"
+      ],
+      "clause": "9.7.16.5.14",
+      "family_archs": [
+        "sm_120f"
+      ],
+      "family_lists_sm120f": true,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".e2m1",
+        ".e2m3",
+        ".e3m2"
+      ],
+      "requires": "sm_120a",
+      "sm_121a_in_archs": false,
+      "statement": ".e3m2 , .e2m3 and .e2m1 alternate floating point type mma operation requires sm_120a and is supported on sm_120f from PTX ISA version 8.8.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-mma",
+      "archs": [
+        "sm_120a"
+      ],
+      "clause": "9.7.16.5.14",
+      "family_archs": [
+        "sm_120f"
+      ],
+      "family_lists_sm120f": true,
+      "kind": "target_note",
+      "name": "mma",
+      "qualifiers": [
+        ".block_scale",
+        ".kind",
+        ".scale_vec_size"
+      ],
+      "requires": "sm_120a",
+      "sm_121a_in_archs": false,
+      "statement": "Support for .kind , .block_scale , .scale_vec_size qualifier requires sm_120a and are supported on sm_120f or higher in the same family from PTX ISA version 8.8.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-ldmatrix",
+      "archs": [],
+      "clause": "9.7.16.5.15",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "ldmatrix",
+      "qualifiers": [],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Requires sm_75 or higher.",
+      "syntax": "ldmatrix.sync.aligned.shape.num{.trans}{.ss}.type r, [p]; ldmatrix.sync.aligned.m8n16.num{.ss}.dst_fmt.src_fmt r, [p]; ldmatrix.sync.aligned.m16n16.num.trans{.ss}.dst_fmt.src_fmt r, [p]; ldmatrix.syn\u2026"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-ldmatrix",
+      "archs": [
+        "sm_100a",
+        "sm_101a",
+        "sm_120a"
+      ],
+      "clause": "9.7.16.5.15",
+      "family_archs": [
+        "sm_100f",
+        "sm_101f",
+        "sm_120f",
+        "sm_110f"
+      ],
+      "family_lists_sm120f": true,
+      "kind": "target_note",
+      "name": "ldmatrix",
+      "qualifiers": [
+        ".m16n16",
+        ".m8n16"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Shapes .m16n16 , .m8n16 are supported on following architectures:",
+      "syntax": "ldmatrix.sync.aligned.shape.num{.trans}{.ss}.type r, [p]; ldmatrix.sync.aligned.m8n16.num{.ss}.dst_fmt.src_fmt r, [p]; ldmatrix.sync.aligned.m16n16.num.trans{.ss}.dst_fmt.src_fmt r, [p]; ldmatrix.syn\u2026"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-ldmatrix",
+      "archs": [
+        "sm_100a",
+        "sm_101a",
+        "sm_120a"
+      ],
+      "clause": "9.7.16.5.15",
+      "family_archs": [
+        "sm_100f",
+        "sm_101f",
+        "sm_120f",
+        "sm_110f"
+      ],
+      "family_lists_sm120f": true,
+      "kind": "target_note",
+      "name": "ldmatrix",
+      "qualifiers": [
+        ".b8"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Type .b8 with ldmatrix is supported on following architectures:",
+      "syntax": "ldmatrix.sync.aligned.shape.num{.trans}{.ss}.type r, [p]; ldmatrix.sync.aligned.m8n16.num{.ss}.dst_fmt.src_fmt r, [p]; ldmatrix.sync.aligned.m16n16.num.trans{.ss}.dst_fmt.src_fmt r, [p]; ldmatrix.syn\u2026"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-ldmatrix",
+      "archs": [
+        "sm_100a",
+        "sm_101a",
+        "sm_120a"
+      ],
+      "clause": "9.7.16.5.15",
+      "family_archs": [
+        "sm_100f",
+        "sm_101f",
+        "sm_120f",
+        "sm_110f"
+      ],
+      "family_lists_sm120f": true,
+      "kind": "target_note",
+      "name": "ldmatrix",
+      "qualifiers": [
+        ".dst_fmt",
+        ".src_fmt"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Qualifiers .src_fmt , .dst_fmt are supported on following architectures:",
+      "syntax": "ldmatrix.sync.aligned.shape.num{.trans}{.ss}.type r, [p]; ldmatrix.sync.aligned.m8n16.num{.ss}.dst_fmt.src_fmt r, [p]; ldmatrix.sync.aligned.m16n16.num.trans{.ss}.dst_fmt.src_fmt r, [p]; ldmatrix.syn\u2026"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-ldmatrix",
+      "archs": [
+        "sm_90a"
+      ],
+      "clause": "9.7.16.5.15",
+      "family_archs": [
+        "sm_100f",
+        "sm_110f",
+        "sm_120f"
+      ],
+      "family_lists_sm120f": true,
+      "kind": "target_note",
+      "name": "ldmatrix",
+      "qualifiers": [
+        ".s4",
+        ".s8"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Types .s8.s4 are supported on following architectures:",
+      "syntax": "ldmatrix.sync.aligned.shape.num{.trans}{.ss}.type r, [p]; ldmatrix.sync.aligned.m8n16.num{.ss}.dst_fmt.src_fmt r, [p]; ldmatrix.sync.aligned.m16n16.num.trans{.ss}.dst_fmt.src_fmt r, [p]; ldmatrix.syn\u2026"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-sparse-mma",
+      "archs": [],
+      "clause": "9.7.16.6.3",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma.sp",
+      "qualifiers": [],
+      "requires": null,
+      "sm_121a_in_archs": false,
+      "statement": "Requires sm_80 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-sparse-mma",
+      "archs": [],
+      "clause": "9.7.16.6.3",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma.sp",
+      "qualifiers": [
+        ".e4m3",
+        ".e5m2"
+      ],
+      "requires": "sm_89",
+      "sm_121a_in_archs": false,
+      "statement": ".e4m3 and .e5m2 alternate floating point type mma operation requires sm_89 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-sparse-mma",
+      "archs": [],
+      "clause": "9.7.16.6.3",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma.sp",
+      "qualifiers": [
+        ".sp::ordered_metadata"
+      ],
+      "requires": "sm_80",
+      "sm_121a_in_archs": false,
+      "statement": "mma.sp::ordered_metadata requires sm_80 or higher.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-sparse-mma",
+      "archs": [],
+      "clause": "9.7.16.6.3",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma.sp",
+      "qualifiers": [
+        ".e4m3",
+        ".e5m2",
+        ".f16",
+        ".m16n8k32"
+      ],
+      "requires": "sm_120",
+      "sm_121a_in_archs": false,
+      "statement": "Support for shape .m16n8k32 and .f16 dtype/ctype with .e4m3 / .e5m2 alternate floating point type mma operation requires sm_120 .",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-sparse-mma",
+      "archs": [
+        "sm_120a"
+      ],
+      "clause": "9.7.16.6.3",
+      "family_archs": [
+        "sm_120f"
+      ],
+      "family_lists_sm120f": true,
+      "kind": "target_note",
+      "name": "mma.sp",
+      "qualifiers": [
+        ".e2m1",
+        ".e2m3",
+        ".e3m2"
+      ],
+      "requires": "sm_120a",
+      "sm_121a_in_archs": false,
+      "statement": ".e3m2 , .e2m3 and .e2m1 alternate floating point type mma operation requires sm_120a and are supported on sm_120f or higher in the same family from PTX ISA version 8.8.",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-sparse-mma",
+      "archs": [
+        "sm_120a"
+      ],
+      "clause": "9.7.16.6.3",
+      "family_archs": [
+        "sm_120f"
+      ],
+      "family_lists_sm120f": true,
+      "kind": "target_note",
+      "name": "mma.sp",
+      "qualifiers": [
+        ".block_scale",
+        ".kind",
+        ".kind::mxf4",
+        ".kind::mxf4nvf4",
+        ".scale_vec_size"
+      ],
+      "requires": "sm_120a",
+      "sm_121a_in_archs": false,
+      "statement": "Support for .kind , .block_scale , .scale_vec_size qualifier requires sm_120a and are supported on sm_120f and later generation targets in the same family from PTX ISA version 8.8 except for .kind::m\u2026",
+      "syntax": "Half precision floating point type:"
+    },
+    {
+      "anchor": "warp-level-matrix-instructions-sparse-mma",
+      "archs": [
+        "sm_120a",
+        "sm_121a"
+      ],
+      "clause": "9.7.16.6.3",
+      "family_archs": [],
+      "family_lists_sm120f": false,
+      "kind": "target_note",
+      "name": "mma.sp",
+      "qualifiers": [
+        ".kind::mxf4",
+        ".kind::mxf4nvf4"
+      ],
+      "requires": null,
+      "sm_121a_in_archs": true,
+      "statement": "Qualifiers .kind::mxf4nvf4 and .kind::mxf4 are supported on following architectures:",
+      "syntax": "Half precision floating point type:"
+    }
+  ],
+  "ptx_version": "9.5",
+  "source_sha256": "3a4fe2a0dff0320a46e140b52d913839c8cd3dc0227b9809a46e116ab5b0a0a3",
+  "static_smem_kb": {
+    "sm_100a": 228,
+    "sm_103a": 228,
+    "sm_107a": 228,
+    "sm_110a": 228,
+    "sm_120a": 100,
+    "sm_121a": 100,
+    "sm_90a": 228
+  },
+  "targets": [
+    "sm_120",
+    "sm_120a",
+    "sm_120f",
+    "sm_121",
+    "sm_121a",
+    "sm_121f"
+  ]
+}

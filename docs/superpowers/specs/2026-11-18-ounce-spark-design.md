@@ -461,9 +461,13 @@ visual check against the page in Gate 0b. [verified from the text unless stated]
 - Targets `sm_120`/`sm_120a`/`sm_120f` and `sm_121`/`sm_121a`/`sm_121f` exist.
 - **Maximum statically allocated shared memory is 100 KB on `sm_120a`/`sm_121a`**, versus 228 KB on
   `sm_90a`/`sm_100a`/`sm_110a`. `spark-mem` must enforce 100 KB, not a datacenter figure.
-- The block-scaled `mma` qualifiers `.kind::mxf4nvf4` and `.kind::mxf4` are listed as supported on `sm_120a` and
-  `sm_121a`. So block-scaled FP4 `mma` **is documented for the Spark's target**, closing an earlier open question.
-- `.acc::f16` and the `e4m3/e5m2` `mma` forms are listed for `sm_120a`/`sm_121a`.
+- **Corrected 2026-11-19 (Plan A Task 2, structured parse; see `inventory/OPEN_QUESTIONS.md`).** The first version of
+  this section misattributed two lists found in flattened text. Plain `mma` states block-scale support as "requires
+  `sm_120a`, supported on `sm_120f` or higher in the same family" and **does not name `sm_121a`**. The sentence listing
+  `.kind::mxf4nvf4` and `.kind::mxf4` for `sm_120a` and `sm_121a` belongs to **`mma.sp`** (sparse). The `.acc::f16` and
+  `e4m3/e5m2` lists naming `sm_121a` belong to `multimem.ld_reduce`, not `mma`; plain `mma` says `e4m3`/`e5m2` need
+  `sm_89` or higher. So whether block-scaled FP4 `mma` is documented for the Spark's exact target `sm_121a` is **still
+  open** (does an `a` target inherit the `sm_120f` family grant?).
 - **`cvt.rn.satfinite{.relu}.{e2m1x2/e2m3x2/e3m2x2/ue8m0x2}.f32` and `cvt.rn{.relu}.f16x2.{e2m1x2/e2m3x2/e3m2x2}`:**
   the architecture-specific list names `sm_100a`, `sm_101a` (renamed `sm_110a`) and `sm_120a`, and **does not name
   `sm_121a`**; the family-specific lists name `sm_120f` or higher in the same family (from PTX 8.8). A forum post
