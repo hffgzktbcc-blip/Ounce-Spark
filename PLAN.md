@@ -4,9 +4,9 @@ Rule: a gate is **done** only when its work is merged, CI is green, and its box 
 Spec: `docs/superpowers/specs/2026-11-18-ounce-spark-design.md` (section 9.3).
 
 - [ ] Gate 0b: PTX ISA inventory (Plan A, Task 2)
-- [ ] Gate 1: spec-first numeric oracles (Plan A, Tasks 3-6)
+- [ ] Gate 1: spec-first numeric oracles (Plan A, Tasks 3-6) — Plan A scope done; TF32 and block-scaled FP4/FP6 remain (Plan C)
   - [x] element formats (Tasks 3-4): oracles + Rust codecs bit-exact; label spec-verified, scope in docs/LIMITS.md
-  - [ ] `mma` for FP16, BF16, FP8, INT8 (Tasks 5-6)
+  - [x] `mma` for FP16, BF16, FP8, INT8 (Tasks 5-6): oracles + Rust reference; label spec-verified, scope in docs/LIMITS.md
 - [ ] Gate 2 spike: ptoxide with one `mma` shape (Plan A, Task 8)
 - [ ] Gate 2: functional compute path (Plan B)
 - [ ] Gate 3a/3d: calibration dataset and noise-floor tool (Plan A, Task 7)
