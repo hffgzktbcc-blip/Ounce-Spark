@@ -97,15 +97,38 @@ fn ue8m0_has_no_round_to_nearest() {
 }
 
 #[test]
-fn formats_without_nan_reject_nan_and_unsaturated_overflow() {
+fn nan_under_satfinite_becomes_positive_max_norm_where_the_format_has_no_nan() {
+    // PTX cvt: "For .e2m1x2, .e2m3x2, .e3m2x2 ... destination formats NaN results are converted to positive MAX_NORM."
+    for (fmt, max_code) in [(Fmt::E2M1, 0b0111u8), (Fmt::E2M3, 0x1F), (Fmt::E3M2, 0x1F)] {
+        assert_eq!(encode_rne(fmt, f64::NAN, true), Ok(max_code), "{fmt:?}");
+        assert_eq!(
+            encode_rne(fmt, -f64::NAN, true),
+            Ok(max_code),
+            "{fmt:?}: the sign of a NaN must not leak into the result"
+        );
+    }
+}
+
+#[test]
+fn without_satfinite_nan_and_overflow_have_no_answer_where_the_format_has_no_nan() {
     assert_eq!(
-        encode_rne(Fmt::E2M1, f64::NAN, true),
+        encode_rne(Fmt::E2M1, f64::NAN, false),
         Err(ElemError::Unrepresentable)
     );
     assert_eq!(
         encode_rne(Fmt::E2M1, 1e30, false),
         Err(ElemError::Unrepresentable)
     );
+}
+
+#[test]
+fn nan_stays_nan_where_the_format_has_nan() {
+    for fmt in [Fmt::E4M3, Fmt::E5M2] {
+        for sat in [true, false] {
+            let code = encode_rne(fmt, f64::NAN, sat).unwrap();
+            assert!(decode(fmt, code).is_nan(), "{fmt:?} sat={sat}");
+        }
+    }
 }
 
 #[test]

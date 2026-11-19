@@ -136,7 +136,13 @@ pub fn encode_rne(fmt: Fmt, x: f64, sat: bool) -> Result<u8, ElemError> {
         0
     };
     if x.is_nan() {
-        return fmt.nan_code().ok_or(ElemError::Unrepresentable);
+        // PTX cvt: where the destination format has NaN the result is NaN; where it has none (e2m1, e2m3, e3m2) the
+        // result is positive MAX_NORM under `.satfinite`, whatever the sign of the NaN. Without `.satfinite` there is no answer.
+        return match (fmt.nan_code(), sat) {
+            (Some(code), _) => Ok(code),
+            (None, true) => Ok(l.max_code),
+            (None, false) => Err(ElemError::Unrepresentable),
+        };
     }
     let a = x.abs();
     let max = decode(fmt, l.max_code);
