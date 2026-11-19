@@ -65,3 +65,11 @@ Nothing is verified yet beyond the oracle data below. Entries are added as each 
   verdictbits figure probably comes from the same llama.cpp results file, and the 25% within-operator spread across builds
   (45.87 vs 60.57) is hidden because values from one submitter are reduced to their median. Do not quote 0.047 as a noise floor.
 - `sigma_between` is the unscaled MAD of ln(x) across submitters, as the spec states; build and kernel fixed effects are not modelled.
+
+### Gate 2 spike (Task 8, `spikes/ptoxide-mma/`)
+- One hand-written PTX kernel executes `mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32` for one warp through a fork of ptoxide and matches
+  all 8 `exact` oracle cases bit for bit and all 12 `banded` cases within band. Label: **spec-verified** for that one instruction and shape.
+- Not covered: every other shape and type, divergence (a lane exiting early is reported, not simulated), shared memory and barriers in a kernel,
+  shuffles, atomics, anything beyond one warp.
+- Assumption (not verified): the lower-index element of a packed f16x2 fragment register is in bits 15:0.
+- The "hours" in the decision record are the executing agent's wall-clock (about 8 minutes), a weak proxy for the spec's 16-hour rule.

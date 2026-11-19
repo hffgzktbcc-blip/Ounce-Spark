@@ -1,5 +1,6 @@
 [workspace]
 members = ["crates/*"]
+exclude = ["spikes/ptoxide-mma/vendor"]
 resolver = "2"
 
 [workspace.package]
