@@ -1,0 +1,23 @@
+{"label": "GLM-4.7-Flash-AWQ (vLLM eugr, solo)", "model": "glm-4.7-flash", "single_tok_s": 23.5, "agg_tok_s": 180.5, "conc": 8, "maxtok": 400}
+{"label": "Qwen3-30B-A3B-NVFP4 (vLLM eugr, solo)", "model": "qwen3-nvfp4", "single_tok_s": 77.1, "agg_tok_s": 313.4, "conc": 8, "maxtok": 400}
+{"label": "GPT-OSS-120B MXFP4/CUTLASS (vLLM eugr, solo)", "model": "openai/gpt-oss-120b", "single_tok_s": 60.4, "agg_tok_s": 116.1, "conc": 8, "maxtok": 400}
+{"label": "GPT-OSS-120B MXFP4/CUTLASS (vLLM, solo)", "model": "openai/gpt-oss-120b", "ttft_ms": 130.6, "single_tok_s": 60.7, "agg_tok_s": 153.2, "conc": 8, "maxtok": 400}
+{"label": "Gemma-4-26B-A4B-NVFP4 (vLLM, solo, no spec-decoding)", "model": "gemma4", "ttft_ms": 77.3, "single_tok_s": 32.6, "agg_tok_s": 178.7, "conc": 8, "maxtok": 400}
+{"label": "Gemma-4-26B-A4B-NVFP4 (vLLM, solo, SEM spec-decoding)", "model": "gemma4", "ttft_ms": 105.2, "single_tok_s": 30.3, "agg_tok_s": 178.9, "conc": 8, "maxtok": 400}
+{"label": "Gemma-4-26B-A4B-NVFP4 (vLLM, solo, MTP spec-decoding x4)", "model": "nvidia/Gemma-4-26B-A4B-NVFP4", "ttft_ms": 120.9, "single_tok_s": 55.6, "agg_tok_s": 210.0, "conc": 8, "maxtok": 400}
+{"label": "Gemma-4-26B-A4B-NVFP4 (vLLM, solo, MTP spec-decoding x2)", "model": "nvidia/Gemma-4-26B-A4B-NVFP4", "ttft_ms": 94.3, "single_tok_s": 54.9, "agg_tok_s": 303.6, "conc": 8, "maxtok": 400}
+{"label": "Gemma-4-26B-A4B-NVFP4 (vLLM, MTP x4, recipe)", "model": "nvidia/Gemma-4-26B-A4B-NVFP4", "ttft_ms": 117.6, "single_tok_s": 55.9, "agg_tok_s": 304.3, "prefill_tok_s": {"2223": 5809.3, "8951": 6791.4}, "conc": 8, "maxtok": 400}
+{"label": "qwen3:30b-a3b (Ollama Q4, mesmo harness)", "model": "qwen3:30b-a3b", "ttft_ms": null, "single_tok_s": 85.6, "agg_tok_s": 88.0, "prefill_tok_s": {"9949": 2682.5}, "conc": 8, "maxtok": 400}
+{"label": "gemma4-26b:latest (Ollama Q4, mesmo harness)", "model": "gemma4-26b:latest", "ttft_ms": null, "single_tok_s": 49.8, "agg_tok_s": 52.0, "prefill_tok_s": {"8954": 2659.7}, "conc": 8, "maxtok": 400}
+{"label": "gpt-oss:120b (Ollama Q4, mesmo harness)", "model": "gpt-oss:120b", "ttft_ms": 4197.8, "single_tok_s": 42.1, "agg_tok_s": 42.9, "prefill_tok_s": {"7876": 1596.9}, "conc": 8, "maxtok": 400}
+{"label": "qwen3:30b-a3b (Ollama, same harness)", "model": "qwen3:30b-a3b", "ttft_ms": 160.8, "single_tok_s": 85.2, "agg_tok_s": 87.5, "prefill_tok_s": {"9949": 36487.2}, "conc": 8, "maxtok": 400}
+{"label": "gemma4-26b:latest (Ollama, same harness)", "model": "gemma4-26b:latest", "ttft_ms": 511.4, "single_tok_s": 49.6, "agg_tok_s": 51.9, "prefill_tok_s": {"8954": 14512.1}, "conc": 8, "maxtok": 400}
+{"label": "gpt-oss:120b (Ollama, same harness)", "model": "gpt-oss:120b", "ttft_ms": 448.6, "single_tok_s": 42.1, "agg_tok_s": 42.5, "prefill_tok_s": {"7876": 9335.0}, "conc": 8, "maxtok": 400}
+{"label": "qwen3-coder-next Q4 (Ollama, same harness)", "model": "qwen3-coder-next:q4_K_M", "ttft_ms": 215.3, "single_tok_s": 59.2, "agg_tok_s": 60.4, "prefill_tok_s": {"9947": 1439.5}, "conc": 8, "maxtok": 400}
+{"label": "qwen3-coder-next INT4-AutoRound (vLLM, solo)", "model": "Intel/Qwen3-Coder-Next-int4-AutoRound", "ttft_ms": 103.6, "single_tok_s": 74.8, "agg_tok_s": 289.0, "prefill_tok_s": {"9947": 3784.6}, "conc": 8, "maxtok": 400}
+{"label": "qwen3-coder-next INT4 (vLLM, ngram spec, CODE prompt)", "model": "Intel/Qwen3-Coder-Next-int4-AutoRound", "ttft_ms": 239.6, "single_tok_s": 74.8, "agg_tok_s": 173.5, "prefill_tok_s": null, "conc": 8, "maxtok": 700}
+{"label": "qwen3-coder-next INT4 (vLLM, no spec, CODE prompt)", "model": "Intel/Qwen3-Coder-Next-int4-AutoRound", "ttft_ms": 237.1, "single_tok_s": 70.6, "agg_tok_s": 232.7, "prefill_tok_s": null, "conc": 8, "maxtok": 700}
+{"label": "qwen3-coder-next INT4 (vLLM, ngram x6 + 8192 batched, CODE)", "model": "Intel/Qwen3-Coder-Next-int4-AutoRound", "ttft_ms": 240.6, "single_tok_s": 73.2, "agg_tok_s": 180.2, "prefill_tok_s": null, "conc": 8, "maxtok": 700}
+{"label": "Qwen3.6-35B-A3B-NVFP4 (vLLM, no MTP)", "model": "nvidia/Qwen3.6-35B-A3B-NVFP4", "ttft_ms": 99.5, "single_tok_s": 78.2, "agg_tok_s": 201.4, "prefill_tok_s": {"8947": 6616.0}, "conc": 8, "maxtok": 400}
+{"label": "Qwen3.6-35B-A3B-NVFP4 (vLLM, MTP x3)", "model": "nvidia/Qwen3.6-35B-A3B-NVFP4", "ttft_ms": 127.9, "single_tok_s": 101.0, "agg_tok_s": 180.7, "prefill_tok_s": {"8947": 5151.2}, "conc": 8, "maxtok": 400}
+{"label": "Qwen3.6-35B-A3B-NVFP4 (vLLM, MTP x3, thinking OFF)", "model": "nvidia/Qwen3.6-35B-A3B-NVFP4", "ttft_ms": 98.1, "single_tok_s": 101.1, "agg_tok_s": 242.2, "prefill_tok_s": null, "conc": 8, "maxtok": 400}

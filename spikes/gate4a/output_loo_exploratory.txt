@@ -1,0 +1,10 @@
+leave-one-model-out, one global factor, per-reading |error| %:
+  held out Gemma-4-26B-A4B  factor from others=0.66  errors=[34, 136, 120]
+  held out Llama3.1-70B     factor from others=0.63  errors=[19]
+  held out Llama3.1-8B      factor from others=0.63  errors=[6]
+  held out Qwen3-30B-A3B    factor from others=0.64  errors=[11, 7]
+  held out gpt-oss-120B     factor from others=0.61  errors=[8, 21, 5, 0, 8, 8, 32]
+  held out gpt-oss-20B      factor from others=0.63  errors=[3]
+
+readings=15  median=8%  mean=28%  p75=32%  max=136%
+share of readings within 25%: 11/15

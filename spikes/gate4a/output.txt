@@ -1,0 +1,19 @@
+BW_eff = 0.9 x 273.0 = 245.7 GB/s (fixed before looking at data)
+
+cell                                  reading                  GB/tok   pred   meas   err% meas/pred
+gpt-oss-120B MXFP4 llama.cpp          b6922 k6.17.1              2.77   88.8  60.57     47      0.68
+gpt-oss-120B MXFP4 llama.cpp          b6816                      2.77   88.8  45.87     94      0.52
+gpt-oss-120B MXFP4 llama.cpp          b6816 unified-mem env      2.77   88.8  40.61    119      0.46
+gpt-oss-120B MXFP4 (llama.cpp file)   verdictbits                2.77   88.8  58.48     52      0.66
+gpt-oss-120B MXFP4 (NVIDIA blog)      stack unknown              2.77   88.8  55.37     60      0.62
+gpt-oss-20B MXFP4 (NVIDIA blog)       stack unknown              2.08  117.9  82.74     42      0.70
+Llama3.1-8B FP8 SGLang b=1            LMSYS                      8.03   30.6  20.50     49      0.67
+Llama3.1-70B FP8 SGLang b=1           LMSYS                     70.60    3.5   2.70     29      0.78
+
+readings n=8; median |err| = 51%; mean = 61%
+measured/pred: min 0.46 max 0.78 median 0.66  (all <1 => one-sided over-prediction: True)
+per-cell median meas/pred: {'gpt-oss-120B MXFP4': 0.62, 'gpt-oss-20B MXFP4': 0.7, 'Llama3.1-8B FP8 SGLang b=1': 0.67, 'Llama3.1-70B FP8 SGLang b=1': 0.78}
+cells n=4; median of cell medians = 0.69
+BW=177: median meas/pred=0.92
+BW=200: median meas/pred=0.82
+BW=262: median meas/pred=0.62
