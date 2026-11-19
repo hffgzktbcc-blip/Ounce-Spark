@@ -13,7 +13,15 @@ Without Blackwell hardware, GPU claims cap at **spec-verified** until a Spark ow
 
 ## Current coverage
 
-Nothing is verified yet beyond the oracle data below. Entries are added as each gate lands.
+Summary after Plan A (details in the sections below; the numeric and executor rows are **spec-verified**, the data row is a dataset and not a verification claim):
+
+| Area | Covered | Not covered |
+|---|---|---|
+| Element formats | decode of e4m3, e5m2, e2m3, e3m2, e2m1, ue8m0; encode of the five RN formats; x2 packing | ue8m0 encode, x4 packs, reverse unpack |
+| `mma` numerics | f16 (k8, k16), bf16 k16, e4m3/e5m2 k32 with f32 accumulate; s8 k32 with s32 wrap; 120 oracle cases | TF32, block-scaled FP4/FP6, f16 accumulate, `.satfinite`, sparse, other shapes |
+| Executor | one instruction (`mma` m16n8k16 f16) on one warp, in a fork of ptoxide | everything else (Plan B) |
+| Data | 15 decode readings, a noise-floor tool | a usable noise floor, prefill rows, more sources |
+| Not hardware agreement | no claim anywhere is checked against real Spark or Blackwell hardware | |
 
 ### Element-format oracles (Task 3, `oracles/data/elements.json`)
 - Decode tables are exhaustive for e4m3, e5m2, e2m3, e3m2, e2m1 and ue8m0; gfloat and ml_dtypes agree on every code.

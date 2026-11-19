@@ -475,3 +475,16 @@ visual check against the page in Gate 0b. [verified from the text unless stated]
   documentation neither clearly confirms nor refutes this; **Gate 0b must resolve it from the page itself**,
   because it decides how FP4 conversion is modelled.
 - `cvt` with `.s2f6x2` is listed for `sm_120a` and `sm_121a`.
+
+
+## 17. Plan A outcome and corrections (2026-11-19)
+
+Plan A (`docs/superpowers/plans/2026-11-18-ounce-spark-plan-a-foundation.md`) is executed on branch `plan-a`; see `docs/superpowers/plans/NEXT.md`.
+Corrections to this document:
+- Section 15 called the two llama.cpp readings [verified]. They were read through a page-summary tool (the raw page returned HTTP 403), so they are
+  `secondary` in `data/spark_decode.csv`.
+- Section 15 counted the 30.3 tok/s Gemma-4 NVFP4 row as "no spec-decoding". The source labels it "SEM spec-decoding" in `results.jsonl` and "no spec"
+  in its prose; the dataset records `unknown` (the Gemma cell median moves from 0.30 to 0.29; nothing else changes).
+- Section 16: the block-scale and `.acc::f16` lists naming `sm_121a` belong to `mma.sp` and `multimem.ld_reduce`; see `inventory/OPEN_QUESTIONS.md`.
+- The Gate 2 spike's decision is **fork ptoxide** (`docs/decisions/0001-ptx-executor.md`); its "hours" are agent wall-clock (about 8 minutes).
+- The noise-floor tool cannot yet produce a usable estimate from the public data (`docs/LIMITS.md`).
