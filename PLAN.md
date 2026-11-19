@@ -5,7 +5,7 @@ Spec: `docs/superpowers/specs/2026-11-18-ounce-spark-design.md` (section 9.3).
 
 - [ ] Gate 0b: PTX ISA inventory (Plan A, Task 2)
 - [ ] Gate 1: spec-first numeric oracles (Plan A, Tasks 3-6)
-  - [ ] element formats (Tasks 3-4)
+  - [x] element formats (Tasks 3-4): oracles + Rust codecs bit-exact; label spec-verified, scope in docs/LIMITS.md
   - [ ] `mma` for FP16, BF16, FP8, INT8 (Tasks 5-6)
 - [ ] Gate 2 spike: ptoxide with one `mma` shape (Plan A, Task 8)
 - [ ] Gate 2: functional compute path (Plan B)

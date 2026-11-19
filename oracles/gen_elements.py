@@ -114,13 +114,15 @@ def build(inventory_path: pathlib.Path = DEFAULT_INVENTORY) -> dict:
                 if special and sat:
                     continue  # inventory does not define NaN/Inf under .satfinite
                 code = gfloat.encode_float(fi, gfloat.round_float(fi, x, sat=sat))
+                is_nan = math.isnan(gfloat.decode_float(fi, code).fval)
                 in_range = math.isfinite(x) and abs(x) <= pos[-1]
-                if in_range:
+                if in_range and not is_nan:
                     other = ml_encode(name, x)
                     if other != code:
                         key = f"encode|{name}|{hexf(x)}|{sat}"
                         (listed if key in known else unknown).append({"key": key, "fmt": name, "x": hexf(x), "sat": sat, "gfloat": code, "ml_dtypes": other})
-                cases.append({"fmt": name, "x": hexf(x), "sat": sat, "code": code, "ptx_valid": sat})
+                # The spec fixes no canonical NaN code (gfloat and ml_dtypes differ), so NaN results carry no code.
+                cases.append({"fmt": name, "x": hexf(x), "sat": sat, "code": None if is_nan else code, "nan": is_nan, "ptx_valid": sat})
     if unknown:
         raise AssertionError(f"unlisted disagreements between gfloat and ml_dtypes: {unknown[:5]} (add to oracles/KNOWN_DISAGREEMENTS.md with a reason)")
     cases.sort(key=lambda c: (c["fmt"], c["sat"], float.fromhex(c["x"]) if c["x"].startswith(("0x", "-0x")) else (math.inf if c["x"] == "inf" else -math.inf if c["x"] == "-inf" else math.inf * 2), c["x"]))

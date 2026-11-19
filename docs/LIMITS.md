@@ -24,3 +24,10 @@ Nothing is verified yet beyond the oracle data below. Entries are added as each 
 - **Omitted:** NaN/Inf inputs under `.satfinite` (the inventory does not define them); NaN/Inf inputs for formats that
   have neither (e2m1, e2m3, e3m2); `ue8m0` encode (PTX offers only `.rz`/`.rp` for it and the libraries disagree on RN).
   Label: **spec-verified** for what is listed (element semantics follow the OCP formats that PTX's `cvt` uses).
+
+### Rust element codecs (Task 4, `crates/spark-num/src/elem.rs`)
+- `decode` matches the oracle bit-exactly for every code of all six formats; `encode_rne` matches all encode cases.
+- `encode_rne(Ue8m0, ..)` returns `Err(NoRoundToNearest)`: PTX has only `.rz`/`.rp` for ue8m0 (deferred).
+- NaN results are checked as "any NaN code": the spec fixes no canonical NaN code.
+- `pack_x2` returns `u16`; the first operand goes in the upper lane (documented for e2m1x2, e4m3x2, e5m2x2, e2m3x2, e3m2x2,
+  ue8m0x2 in the PTX text). The `x4` forms and reverse-direction unpacking are not modelled yet.

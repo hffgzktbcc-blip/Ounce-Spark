@@ -146,3 +146,11 @@ def test_unlisted_library_disagreement_fails_generation(monkeypatch):
     monkeypatch.setattr(g, "ml_encode", lambda fmt, x: g.gfloat.encode_float(g.FORMATS[fmt][1], 1.0))
     with pytest.raises(AssertionError, match="unlisted disagreements"):
         g.build()
+
+
+def test_nan_results_are_recorded_as_nan_without_a_canonical_code(built):
+    assert all("nan" in c for c in built["encode_cases"])
+    overflow = [c for c in built["encode_cases"] if c["fmt"] == "e4m3" and c["sat"] is False and float.fromhex(c["x"]) == 1e30]
+    assert overflow and overflow[0]["nan"] is True and overflow[0]["code"] is None
+    ordinary = case(built, "e2m1", 2.5, True)
+    assert ordinary["nan"] is False and ordinary["code"] == 4
