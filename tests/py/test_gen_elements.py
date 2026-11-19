@@ -138,7 +138,8 @@ def test_committed_oracle_files_match_a_fresh_build(tmp_path):
     committed = REPO / "oracles" / "data" / "elements.json"
     assert committed.exists(), "run python oracles/gen_elements.py oracles/data"
     assert committed.read_bytes() == (tmp_path / "data" / "elements.json").read_bytes()
-    assert (REPO / "oracles" / "MANIFEST.sha256").read_bytes() == (tmp_path / "MANIFEST.sha256").read_bytes()
+    line = (tmp_path / "MANIFEST.sha256").read_text().strip()   # the committed manifest also lists mma.json
+    assert line in (REPO / "oracles" / "MANIFEST.sha256").read_text().splitlines()
 
 
 def test_unlisted_library_disagreement_fails_generation(monkeypatch):

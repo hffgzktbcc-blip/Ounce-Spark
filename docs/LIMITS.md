@@ -31,3 +31,15 @@ Nothing is verified yet beyond the oracle data below. Entries are added as each 
 - NaN results are checked as "any NaN code": the spec fixes no canonical NaN code.
 - `pack_x2` returns `u16`; the first operand goes in the upper lane (documented for e2m1x2, e4m3x2, e5m2x2, e2m3x2, e3m2x2,
   ue8m0x2 in the PTX text). The `x4` forms and reverse-direction unpacking are not modelled yet.
+
+### `mma` oracles (Task 5, `oracles/data/mma.json`)
+- Combinations (all non-block-scaled, listed by the PTX inventory): `m16n8k8` and `m16n8k16` f16, `m16n8k16` bf16,
+  `m16n8k32` e4m3 and e5m2 with f32 accumulate, `m16n8k32` s8 with s32 accumulate. 20 cases each, 120 in total.
+- `exact` cases are bit-exact in **any** accumulation order (inputs chosen so every partial sum is exactly representable;
+  s8 is integer arithmetic). `banded` cases carry a tolerance band **derived by me**: gamma_{K+2} * (sum |a*b| + |c|),
+  gamma_n = n*2^-24/(1 - n*2^-24). It bounds any sequential f32 summation of K products plus c and the final rounding.
+  The Plan's `K * 2^-24 * (...)` was not an upper bound (it ignored the addition of c and the final rounding).
+- PTX leaves accumulation order and internal precision unspecified (the band is therefore not a hardware claim).
+- **Not covered:** e4m3/e5m2 at `m16n8k16` (the plain f8 form also lists it), mixed e4m3 x e5m2, f16 accumulate, TF32,
+  `m16n8k8` bf16, double precision, u8/u4/s4/b1, sparse `mma.sp`, block-scaled and `.kind::` forms, NaN/Inf inputs.
+- Label: **spec-verified** for the listed cases once Task 6 passes them; not hardware agreement.

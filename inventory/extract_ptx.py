@@ -115,6 +115,51 @@ def _target_note(statement: str, ul):
     }
 
 
+FORM_LINE = re.compile(r"^mma\.sync\.aligned\.(\S+)\s")
+DEF_LINE = re.compile(r"^\.(\w+)\s*=\s*\{([^}]*)\}")
+SHAPE_TOKEN = re.compile(r"^m\d+n\d+k\d+$")
+LAYOUT_TOKENS = {"row", "col", "alayout", "blayout"}
+MODIFIER_TOKENS = {"kind", "block_scale", "scale_vec_size", "satfinite"}
+
+
+def _members(text: str):
+    return [m.strip().lstrip(".") for m in text.split(",") if m.strip()]
+
+
+def _resolve_form(line: str, spec: str, defs: dict, base: dict) -> dict:
+    """One `mma.sync.aligned.<spec>` line plus the named type sets defined after it."""
+    tokens = re.sub(r"\{[^}]*\}", "", spec).split(".")
+    shape, rest = tokens[0], [t for t in tokens[1:] if t not in LAYOUT_TOKENS]
+    has_kind = "kind" in rest
+    rest = [t for t in rest if t not in MODIFIER_TOKENS]
+    d, a, b, c = (defs.get(t, [t]) for t in rest[:4])
+    return dict(
+        base,
+        kind="form",
+        statement=_excerpt(line),
+        shapes=defs.get("shape", []) if shape == "shape" else ([shape] if SHAPE_TOKEN.match(shape) else []),
+        d_types=d, a_types=a, b_types=b, c_types=c,
+        kinds=defs.get("kind", []) if has_kind else [],
+        scale_types=defs.get("stype", []) if "stype" in rest[4:] else [],
+    )
+
+
+def _parse_forms(text: str, base: dict):
+    """Definitions (`.name = {..}`) apply to every instruction line since the previous definitions group."""
+    out, pending, defs, after_defs = [], [], {}, False
+    for raw in text.splitlines():
+        line = raw.strip()
+        if m := FORM_LINE.match(line + " "):
+            if after_defs:
+                out += [_resolve_form(ln, sp, defs, base) for ln, sp in pending]
+                pending, defs, after_defs = [], {}, False
+            pending.append((line, m.group(1)))
+        elif d := DEF_LINE.match(line):
+            defs[d.group(1)] = _members(d.group(2))
+            after_defs = True
+    return out + [_resolve_form(ln, sp, defs, base) for ln, sp in pending]
+
+
 def _prose(sec):
     """Paragraphs outside the syntax, ISA-notes and examples regions (rubrics can nest, e.g. under Notes)."""
     skip, current = {"Syntax", "PTX ISA Notes", "Target ISA Notes", "Examples"}, None
@@ -134,6 +179,10 @@ def _entries_for(sec, name, number):
     if blocks:
         syntax = _excerpt(blocks[0].get_text(" "))
     out = []
+    if name == "mma":
+        for block in _rubric(sec, "Syntax"):
+            if block.name in ("div", "pre"):
+                out += _parse_forms(block.get_text(), base)
     notes = _rubric(sec, "Target ISA Notes")
     i = 0
     while i < len(notes):

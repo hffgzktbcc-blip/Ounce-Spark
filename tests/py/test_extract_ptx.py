@@ -55,24 +55,25 @@ TARGET = (
 )
 
 
-def instruction_section(i, name, notes="", description=""):
+def instruction_section(i, name, notes="", description="", syntax_html=None):
     category, title = INSTRUCTIONS[name]
+    syntax_html = syntax_html or '<div class="highlight-text"><pre>demo.form  d, a;</pre></div>'
     return (
-        f'<section id="sec-{name.replace(".", "-")}"><h4>9.7.{i}. {category}: {title} <a></a></h4>'
-        '<p class="rubric">Syntax</p><div class="highlight-text"><pre>demo.form  d, a;</pre></div>'
+        f'<section id="sec-{name.replace(".", "-")}"><h4>9.7.{i}. {category}: {title} <a>\uf0c1</a></h4>'
+        f'<p class="rubric">Syntax</p>{syntax_html}'
         f'<p class="rubric">Description</p>{description}'
         f'<p class="rubric">Target ISA Notes</p>{notes}<p class="rubric">Examples</p></section>'
     )
 
 
-def page(omit=(), include_smem=True, notes=None, descriptions=None, title="1. Introduction — PTX ISA 9.5 documentation"):
-    notes, descriptions = notes or {}, descriptions or {}
+def page(omit=(), include_smem=True, notes=None, descriptions=None, syntax=None, title="1. Introduction \u2014 PTX ISA 9.5 documentation"):
+    notes, descriptions, syntax = notes or {}, descriptions or {}, syntax or {}
     parts = [f"<html><head><title>{title}</title></head><body>", TARGET]
     if include_smem:
         parts.append(SMEM)
     for i, name in enumerate(INSTRUCTIONS, start=1):
         if name not in omit:
-            parts.append(instruction_section(i, name, notes.get(name, "<p>Requires sm_70 or higher.</p>"), descriptions.get(name, "")))
+            parts.append(instruction_section(i, name, notes.get(name, "<p>Requires sm_70 or higher.</p>"), descriptions.get(name, ""), syntax.get(name)))
     parts.append("</body></html>")
     return "".join(parts)
 
@@ -235,3 +236,84 @@ def test_paragraph_before_any_rubric_is_ignored_not_a_crash():
     assert "stray ulp error 3 note." in html
     inv = ex.extract(html)
     assert not [e for e in inv["instructions"] if "stray" in e["statement"]]
+
+
+def mma_syntax(*pre_blocks):
+    return "".join(f'<p>group:</p><div class="highlight-text"><pre>{b}</pre></div>' for b in pre_blocks)
+
+
+def forms(html):
+    ex = load("extract_ptx")
+    return entries(ex.extract(page(syntax={"mma": html})), "mma", "form")
+
+
+def test_mma_form_resolves_named_sets():
+    (f,) = forms(mma_syntax("mma.sync.aligned.m16n8k8.row.col.dtype.f16.f16.ctype  d, a, b, c;\n\n.dtype = {.f16, .f32};\n.ctype = {.f16, .f32};"))
+    assert f["shapes"] == ["m16n8k8"]
+    assert f["d_types"] == ["f16", "f32"] and f["c_types"] == ["f16", "f32"]
+    assert f["a_types"] == ["f16"] and f["b_types"] == ["f16"]
+    assert f["kinds"] == [] and f["statement"].startswith("mma.sync.aligned.m16n8k8")
+
+
+def test_definitions_apply_to_every_form_since_the_previous_definitions():
+    block = (
+        "mma.sync.aligned.m16n8k16.row.col.f32.atype.btype.f32 d, a, b, c;\n"
+        "mma.sync.aligned.shape.row.col.dtype.f8type.f8type.ctype d, a, b, c;\n"
+        ".atype = {.bf16, .tf32};\n.btype = {.bf16, .tf32};\n.f8type = {.e4m3, .e5m2};\n"
+        ".ctype = {.f16, .f32};\n.dtype = {.f16, .f32};\n.shape = {.m16n8k16, .m16n8k32};\n"
+    )
+    first, second = forms(mma_syntax(block))
+    assert first["a_types"] == ["bf16", "tf32"] and first["d_types"] == ["f32"] and first["shapes"] == ["m16n8k16"]
+    assert second["a_types"] == ["e4m3", "e5m2"] and second["shapes"] == ["m16n8k16", "m16n8k32"]
+    assert second["d_types"] == ["f16", "f32"] and second["c_types"] == ["f16", "f32"]
+
+
+def test_a_second_definition_group_belongs_to_the_form_before_it():
+    block = (
+        "mma.sync.aligned.shape.row.col{.satfinite}.s32.atype.btype.s32 d, a, b, c;\n"
+        ".shape = {.m8n8k16, .m16n8k16, .m16n8k32}\n.atype = {.u8, .s8};\n.btype = {.u8, .s8};\n\n"
+        "mma.sync.aligned.shape.row.col{.satfinite}.s32.atype.btype.s32 d, a, b, c;\n"
+        ".shape = {.m8n8k32, .m16n8k32, .m16n8k64}\n.atype = {.u4, .s4};\n.btype = {.u4, .s4};\n"
+    )
+    first, second = forms(mma_syntax(block))
+    assert first["shapes"] == ["m8n8k16", "m16n8k16", "m16n8k32"] and first["a_types"] == ["u8", "s8"]
+    assert second["shapes"] == ["m8n8k32", "m16n8k32", "m16n8k64"] and second["a_types"] == ["u4", "s4"]
+    assert first["d_types"] == ["s32"] and first["c_types"] == ["s32"]
+
+
+def test_block_scale_form_records_kind_and_scale_type():
+    block = (
+        "mma.sync.aligned.m16n8k64.row.col.kind.block_scale.scale_vec_size.f32.e2m1.e2m1.f32.stype d, a, b, c, sa, sb;\n\n"
+        ".kind = {.kind::mxf4nvf4};\n.scale_vec_size = {.scale_vec::2X, .scale_vec::4X};\n.stype = {.ue8m0, .ue4m3};\n"
+    )
+    (f,) = forms(mma_syntax(block))
+    assert f["shapes"] == ["m16n8k64"] and f["kinds"] == ["kind::mxf4nvf4"]
+    assert f["a_types"] == ["e2m1"] and f["b_types"] == ["e2m1"] and f["d_types"] == ["f32"]
+    assert f["scale_types"] == ["ue8m0", "ue4m3"]
+
+
+def test_non_mma_instructions_get_no_form_entries():
+    ex = load("extract_ptx")
+    syntax = '<div class="highlight-text"><pre>mma.sync.aligned.m16n8k8.row.col.f32.f16.f16.f32 d,a,b,c;</pre></div>'
+    inv = ex.extract(page(syntax={"cvt": syntax}))
+    assert not entries(inv, "cvt", "form")
+
+
+@pytest.mark.skipif(not REAL_PAGE.exists(), reason="run inventory/fetch_ptx.py first")
+def test_real_page_mma_forms():
+    ex = load("extract_ptx")
+    fs = entries(ex.extract(REAL_PAGE.read_text(errors="replace")), "mma", "form")
+
+    def has(shape, a, b, c, kind=None):
+        return any(
+            shape in f["shapes"] and a in f["a_types"] and b in f["b_types"] and c in f["c_types"] and f["d_types"]
+            and (kind in f["kinds"] if kind else not f["kinds"])
+            for f in fs
+        )
+
+    assert has("m16n8k16", "f16", "f16", "f32") and has("m16n8k8", "f16", "f16", "f32")
+    assert has("m16n8k16", "bf16", "bf16", "f32")
+    assert has("m16n8k32", "e4m3", "e4m3", "f32") and has("m16n8k32", "e5m2", "e5m2", "f32")
+    assert has("m16n8k32", "s8", "s8", "s32")
+    assert has("m16n8k64", "e2m1", "e2m1", "f32", kind="kind::mxf4nvf4")
+    assert any("ue4m3" in f["scale_types"] for f in fs)

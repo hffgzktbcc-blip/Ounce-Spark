@@ -8,7 +8,6 @@ Scope notes (see docs/LIMITS.md): ue8m0 has decode only (PTX offers just .rz/.rp
 PTX makes .satfinite mandatory for every narrow destination type, so non-saturating cases are library semantics
 (`ptx_valid: false`); NaN/Inf inputs under .satfinite are omitted because the inventory does not define them.
 """
-import hashlib
 import importlib.metadata
 import json
 import math
@@ -20,6 +19,9 @@ import gfloat
 import gfloat.formats as F
 import ml_dtypes as md
 import numpy as np
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from _common import hexf, write_manifest  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 DEFAULT_INVENTORY = ROOT / "inventory" / "ptx_sm12x.json"
@@ -35,14 +37,6 @@ FORMATS = {
     "ue8m0": (8, F.format_info_ocp_e8m0, md.float8_e8m0fnu),
 }
 ENCODE_FORMATS = ["e4m3", "e5m2", "e2m3", "e3m2", "e2m1"]
-
-
-def hexf(x: float) -> str:
-    if math.isnan(x):
-        return "nan"
-    if math.isinf(x):
-        return "inf" if x > 0 else "-inf"
-    return x.hex()
 
 
 def known_keys() -> set:
@@ -141,8 +135,7 @@ def main(out_dir: pathlib.Path) -> int:
     out_dir = pathlib.Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "elements.json").write_text(json.dumps(build(), indent=1, sort_keys=True) + "\n")
-    lines = [f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {out_dir.name}/{p.name}" for p in sorted(out_dir.iterdir()) if p.is_file()]
-    (out_dir.parent / "MANIFEST.sha256").write_text("\n".join(lines) + "\n")
+    write_manifest(out_dir)
     print(f"wrote {out_dir}/elements.json and MANIFEST.sha256")
     return 0
 
