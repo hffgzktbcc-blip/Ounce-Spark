@@ -42,13 +42,13 @@ Nothing is verified yet beyond the oracle data below. Entries are added as each 
 - PTX leaves accumulation order and internal precision unspecified (the band is therefore not a hardware claim).
 - **Not covered:** e4m3/e5m2 at `m16n8k16` (the plain f8 form also lists it), mixed e4m3 x e5m2, f16 accumulate, TF32,
   `m16n8k8` bf16, double precision, u8/u4/s4/b1, sparse `mma.sp`, block-scaled and `.kind::` forms, NaN/Inf inputs.
-- Label: **spec-verified** for the listed cases once Task 6 passes them; not hardware agreement.
+- Label: **spec-verified** for the listed cases (the Rust reference of Task 6 passes them); not hardware agreement.
 
-### Rust  reference (Task 6, )
--  accumulates in f32 in increasing k from c; all 60  oracle cases are bit-exact (sign of a zero sum is not
-  compared) and all 60  cases are inside their band. PTX only requires "at least single precision" and leaves order,
+### Rust `mma` reference (Task 6, `crates/spark-num/src/mma.rs`)
+- `mma_ref_f32` accumulates in f32 in increasing k from c; all 60 `exact` oracle cases are bit-exact (sign of a zero sum is not
+  compared) and all 60 `banded` cases are inside their band. PTX only requires "at least single precision" and leaves order,
   rounding and subnormal handling unspecified, so hardware may differ within the band.
--  wraps without  (stated by PTX); the saturating form is not implemented.
+- `mma_ref_s32` wraps without `.satfinite` (stated by PTX); the saturating form is not implemented.
 - Lane fragment layouts exist only for the two f16 shapes (m16n8k8, m16n8k16), checked against the PTX formulas and for
   exactly-once coverage. Layouts for the k32 types are Plan B.
 - NaN and Inf propagate as IEEE f32 arithmetic does; this is tested on 2x2x2 matrices, not taken from the oracle.
