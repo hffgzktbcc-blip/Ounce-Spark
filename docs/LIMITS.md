@@ -13,4 +13,14 @@ Without Blackwell hardware, GPU claims cap at **spec-verified** until a Spark ow
 
 ## Current coverage
 
-Nothing is verified yet. Entries are added as each gate lands.
+Nothing is verified yet beyond the oracle data below. Entries are added as each gate lands.
+
+### Element-format oracles (Task 3, `oracles/data/elements.json`)
+- Decode tables are exhaustive for e4m3, e5m2, e2m3, e3m2, e2m1 and ue8m0; gfloat and ml_dtypes agree on every code.
+- Encode cases: ties-to-even midpoints between every adjacent pair of values (including zero), min subnormal, max,
+  max plus half a gap, +-1e30, +-0.0, with `sat` true; non-saturating cases exist only for e4m3 and e5m2 and are marked
+  `ptx_valid: false` (PTX makes `.satfinite` mandatory for these destination types).
+- Only **in-range** encodes are cross-checked by both libraries; overflow, Inf and NaN expectations come from gfloat alone.
+- **Omitted:** NaN/Inf inputs under `.satfinite` (the inventory does not define them); NaN/Inf inputs for formats that
+  have neither (e2m1, e2m3, e3m2); `ue8m0` encode (PTX offers only `.rz`/`.rp` for it and the libraries disagree on RN).
+  Label: **spec-verified** for what is listed (element semantics follow the OCP formats that PTX's `cvt` uses).

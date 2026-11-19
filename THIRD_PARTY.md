@@ -5,3 +5,4 @@ Each entry names the project, licence, what was taken, and where it is recorded 
 - **dgx-spark-field-notes** (Sergio Silva, MIT): benchmark readings in `spikes/gate4a/field_notes_results.jsonl`.
   Source: <https://github.com/sergioamsilva/dgx-spark-field-notes>. Attribution kept in `data/SOURCES.md` once
   the dataset lands (Task 7).
+- **ml_dtypes** 0.7.0 (Apache-2.0) and **gfloat** 0.5.2 (MIT): used at generation time by `oracles/gen_elements.py`; their outputs (decode tables, encode cases) are committed in `oracles/data/elements.json`. Neither is vendored.
